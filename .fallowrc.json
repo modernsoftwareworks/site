@@ -1,0 +1,6 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "entry": ["src/pages/**/*.astro", "astro.config.ts"],
+  "ignorePatterns": ["docs/design/**"],
+  "ignoreDependencies": ["lightningcss", "@resvg/resvg-js"]
+}
