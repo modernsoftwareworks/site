@@ -1,0 +1,26 @@
+---
+import Head from '../components/seo/Head.astro';
+import type { Locale } from '../i18n/locales';
+import type { Messages } from '../i18n/schema';
+import '../styles/launch.css';
+
+interface Props {
+  locale: Locale;
+  messages: Messages;
+  path?: string;
+  noindex?: boolean;
+  staticField?: boolean;
+}
+
+const { locale, messages, path, noindex, staticField = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang={messages.htmlLang}>
+  <head>
+    <Head locale={locale} messages={messages} path={path} noindex={noindex} />
+  </head>
+  <body class:list={{ 'is-fallback': staticField }}>
+    <slot />
+  </body>
+</html>

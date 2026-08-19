@@ -1,0 +1,33 @@
+---
+import { type Locale, localeLabels, localePath, locales } from '../../i18n/locales';
+import type { Messages } from '../../i18n/schema';
+
+interface Props {
+  locale: Locale;
+  messages: Messages;
+}
+
+const { locale, messages } = Astro.props;
+---
+
+<nav class="langs" data-od-id="lang-switcher" aria-label={messages.langLabel}>
+  {locales.map((code) => (
+      <a
+        href={localePath(code)}
+        hreflang={code}
+        lang={code}
+        data-lang={code}
+        data-od-id={`lang-${code}`}
+        data-astro-prefetch={code === locale ? 'false' : 'hover'}
+        aria-current={code === locale ? 'page' : undefined}
+      >
+        {localeLabels[code]}
+      </a>
+    ))}
+</nav>
+
+<script>
+  import { persistLocaleOnSwitch } from '../../scripts/locale-preference';
+
+  persistLocaleOnSwitch();
+</script>

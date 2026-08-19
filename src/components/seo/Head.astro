@@ -1,0 +1,85 @@
+---
+import { type Locale, localeOg, localePath, locales } from '../../i18n/locales';
+import type { Messages } from '../../i18n/schema';
+import { SITE } from '../../lib/site';
+
+interface Props {
+  locale: Locale;
+  messages: Messages;
+  path?: string;
+  noindex?: boolean;
+}
+
+const { locale, messages, path = '/', noindex = false } = Astro.props;
+const canonical = new URL(localePath(locale, path), SITE.url).href;
+const ogImage = new URL('/og.png', SITE.url).href;
+---
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="oklch(14% 0.012 240)">
+<title>{messages.title}</title>
+<meta name="description" content={messages.description}>
+{noindex && <meta name="robots" content="noindex" />}
+<link rel="canonical" href={canonical}>
+{locales.map((code) => (
+    <link rel="alternate" hreflang={code} href={new URL(localePath(code, path), SITE.url).href} />
+  ))}
+<link rel="alternate" hreflang="x-default" href={new URL(localePath('en', path), SITE.url).href}>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content={SITE.name}>
+<meta property="og:title" content={messages.title}>
+<meta property="og:description" content={messages.description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={ogImage}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content={localeOg[locale]}>
+{locales
+    .filter((code) => code !== locale)
+    .map((code) => <meta property="og:locale:alternate" content={localeOg[code]} />)}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={messages.title}>
+<meta name="twitter:description" content={messages.description}>
+<meta name="twitter:image" content={ogImage}>
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ProfessionalService',
+        '@id': `${SITE.url}/#studio`,
+        name: SITE.name,
+        url: SITE.url,
+        email: SITE.email,
+        description: messages.description,
+        image: ogImage,
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE.url}/#site`,
+        name: SITE.name,
+        url: SITE.url,
+        inLanguage: locales,
+        publisher: { '@id': `${SITE.url}/#studio` },
+      },
+    ],
+  })}
+/>
+<script is:inline>
+  (() => {
+    try {
+      const path = location.pathname.replace(/\/+$/, '') || '/';
+      if (path !== '/') return;
+      const saved = localStorage.getItem('msw-lang');
+      if (saved === 'it' || saved === 'ja') location.replace(`/${saved}/`);
+    } catch {
+      // Private mode or blocked storage.
+    }
+  })();
+</script>

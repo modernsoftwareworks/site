@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://modernsoftware.works/sitemap-index.xml
