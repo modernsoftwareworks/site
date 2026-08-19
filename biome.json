@@ -10,7 +10,6 @@
       "**",
       "!!**/dist",
       "!!**/docs/design",
-      "!!**/package-lock.json",
       "!!**/bun.lock",
       "!**/*.png",
       "!**/*.svg",
