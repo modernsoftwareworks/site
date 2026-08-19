@@ -5,29 +5,30 @@ Studio site for [modernsoftware.works](https://modernsoftware.works). Astro gene
 ## Develop
 
 ```bash
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 ```bash
-npm test
-npm run lint
-npm run check
-npm run deadcode
-npm run verify
+bun test
+bun run lint
+bun run check
+bun run deadcode
+bun run verify
 ```
 
 Toolchain is native binaries, one job each:
 
+- **Bun** — package manager and runtime
 - **Biome** — lint + format for `.astro`, TypeScript, CSS, JSON (replaces ESLint + Prettier)
-- **Fallow** — unused code, deps, cycles (`npm run deadcode`; `npx fallow` also reports dupes and health)
+- **Fallow** — unused code, deps, cycles (`bun run deadcode`; `bunx fallow` also reports dupes and health)
 - **Lefthook** — git hooks (replaces husky / simple-git-hooks + lint-staged)
 - **Lightning CSS** — minify
 - **Vitest** — tests
 
-`npm run verify` is the full gate: types, lint, dead code, tests, production build. Commits run Biome on staged files and Fallow dead-code in parallel.
+`bun run verify` is the full gate: types, lint, dead code, tests, production build. Commits run Biome on staged files and Fallow dead-code in parallel.
 
-Push to `main` deploys through Workers Builds (`npm run build` then `npx wrangler deploy`). Match `name` in `wrangler.jsonc` to the Worker already connected to this GitHub repo.
+Push to `main` deploys through Workers Builds (`bun run build` then `bunx wrangler deploy`). In the dashboard, set **Build command** to `bun run build`, **Deploy command** to `bunx wrangler deploy`, and **BUN_VERSION** to `1.3.14` so CI is not stuck on the image default. Match `name` in `wrangler.jsonc` to the Worker already connected to this GitHub repo.
 
 ## Layout
 
