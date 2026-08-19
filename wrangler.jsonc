@@ -2,11 +2,6 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "site",
   "compatibility_date": "2026-08-19",
-  "build": {
-    "command": "bun run build",
-    "cwd": ".",
-    "watch_dir": ["src", "public"]
-  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1

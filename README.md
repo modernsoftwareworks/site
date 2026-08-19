@@ -28,7 +28,7 @@ Toolchain is native binaries, one job each:
 
 `bun run verify` is the full gate: types, lint, dead code, tests, production build. Commits run Biome on staged files and Fallow dead-code in parallel.
 
-Push to `main` deploys through Workers Builds. The Worker name is `site`. Workers Builds does not read `wrangler.jsonc` `build.command`, so the dashboard still needs an explicit build step (see below).
+Push to `main` deploys through Workers Builds. The Worker name is `site`. Configure the dashboard Build command as `bun run build` and Deploy as `bunx wrangler deploy`.
 
 ## Layout
 
