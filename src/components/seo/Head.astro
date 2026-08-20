@@ -1,5 +1,6 @@
 ---
-import { type Locale, localeOg, localePath, locales } from '../../i18n/locales';
+import { Font } from 'astro:assets';
+import { defaultLocale, type Locale, localeOg, localePath, locales } from '../../i18n/locales';
 import type { Messages } from '../../i18n/schema';
 import { SITE } from '../../lib/site';
 
@@ -13,12 +14,14 @@ interface Props {
 const { locale, messages, path = '/', noindex = false } = Astro.props;
 const canonical = new URL(localePath(locale, path), SITE.url).href;
 const ogImage = new URL('/og.png', SITE.url).href;
+const logo = new URL('/favicon.svg', SITE.url).href;
+const prefixed = locales.filter((code) => code !== defaultLocale);
 ---
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="oklch(14% 0.012 240)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#fafbfd">
 <title>{messages.title}</title>
 <meta name="description" content={messages.description}>
 {noindex && <meta name="robots" content="noindex" />}
@@ -29,6 +32,17 @@ const ogImage = new URL('/og.png', SITE.url).href;
 <link rel="alternate" hreflang="x-default" href={new URL(localePath('en', path), SITE.url).href}>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<Font cssVariable="--font-display" preload />
+<Font cssVariable="--font-body" preload />
+{locale === 'ja' && (
+    <>
+      <Font cssVariable="--font-jp-serif" />
+      <Font cssVariable="--font-jp-sans" />
+    </>
+  )}
+{locale === 'ar' && <Font cssVariable="--font-ar" />}
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content={SITE.name}>
 <meta property="og:title" content={messages.title}>
@@ -57,8 +71,16 @@ const ogImage = new URL('/og.png', SITE.url).href;
         name: SITE.name,
         url: SITE.url,
         email: SITE.email,
+        slogan: messages.overline,
         description: messages.description,
         image: ogImage,
+        logo,
+        knowsLanguage: locales,
+        areaServed: ['IT', 'FR', 'JP', 'SA', 'US'],
+        makesOffer: messages.services.map((service) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: service.title },
+        })),
       },
       {
         '@type': 'WebSite',
@@ -71,13 +93,13 @@ const ogImage = new URL('/og.png', SITE.url).href;
     ],
   })}
 />
-<script is:inline>
+<script is:inline define:vars={{ prefixed }}>
   (() => {
     try {
       const path = location.pathname.replace(/\/+$/, '') || '/';
       if (path !== '/') return;
       const saved = localStorage.getItem('msw-lang');
-      if (saved === 'it' || saved === 'ja') location.replace(`/${saved}/`);
+      if (saved && prefixed.includes(saved)) location.replace(`/${saved}/`);
     } catch {
       // Private mode or blocked storage.
     }

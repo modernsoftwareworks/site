@@ -1,0 +1,48 @@
+---
+import type { Messages } from '../../i18n/schema';
+import BrandMark from '../brand/BrandMark.astro';
+
+interface Props {
+  messages: Messages;
+}
+
+const { messages: t } = Astro.props;
+---
+
+<footer class="footer">
+  <span class="lockup" dir="ltr" translate="no">
+    <BrandMark />
+    <span>Modern Software Works<span class="dot">.</span></span>
+  </span>
+  <span>{t.footerTag}</span>
+</footer>
+
+<style>
+  .footer {
+    scroll-snap-align: end;
+    padding: 20px var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+  }
+
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 600 16px var(--stack-display);
+    letter-spacing: var(--tracking-wordmark);
+    color: var(--ink);
+    --mark-size: 22px;
+  }
+
+  .dot {
+    color: var(--accent-text);
+  }
+</style>

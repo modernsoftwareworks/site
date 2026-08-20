@@ -1,0 +1,232 @@
+---
+import type { Messages } from '../../i18n/schema';
+import { mailHref } from '../../i18n/schema';
+import BrandMark from '../brand/BrandMark.astro';
+
+interface Props {
+  messages: Messages;
+}
+
+const { messages: t } = Astro.props;
+
+// The track is duplicated so translateX(-50%) loops seamlessly.
+const marquee = [...t.services, ...t.services];
+---
+
+<section id="top" class="hero">
+  <div class="stage">
+    <div class="copy">
+      <h1 class="headline">
+        <span class="clip"><span class="line a">{t.h1a}</span></span>
+        <span class="clip"
+          ><span class="line b"><em>{t.h1b}</em></span></span
+        >
+      </h1>
+      <p class="lede">{t.lede}</p>
+      <div class="ctas">
+        <a class="cta primary" href={mailHref(t.inquirySubject)}>{t.cta1}</a>
+        <a class="cta ghost" href="#services">{t.cta2}</a>
+      </div>
+    </div>
+
+    <div class="mark-stage" data-tilt>
+      <div class="mark-float">
+        <span class="mark-wrap" data-tilt-target><BrandMark /></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee" dir="ltr" aria-hidden="true">
+    <div class="track">
+      {marquee.map((service) => (
+          <span class="item">
+            <span class="item-text">{service.title}</span>
+            <span class="star">✦</span>
+          </span>
+        ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { mountTilt } from '../../scripts/tilt';
+
+  mountTilt();
+</script>
+
+<style>
+  .hero {
+    min-height: calc(100svh - var(--nav-h));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    border-bottom: 1px solid var(--ink);
+    background: linear-gradient(180deg, var(--paper) 45%, var(--paper-2) 100%);
+  }
+
+  .stage {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    padding: clamp(32px, 5vh, 72px) var(--gutter);
+  }
+
+  .headline {
+    margin: 0;
+    font: 600 clamp(42px, 6.4vw, 88px) / 1.04 var(--stack-display);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .clip {
+    display: block;
+    overflow: hidden;
+  }
+
+  .clip + .clip {
+    margin-top: 4px;
+  }
+
+  .line {
+    display: block;
+    animation: var(--anim-rise) 0.9s var(--ease) both;
+  }
+
+  .line.a {
+    animation-delay: 0.05s;
+  }
+
+  .line.b {
+    animation-delay: 0.18s;
+  }
+
+  .line em {
+    font-style: normal;
+    background: var(--wash);
+    padding: 2px 18px;
+    border-radius: 16px;
+    display: inline-block;
+  }
+
+  .lede {
+    animation: var(--anim-rise) 0.9s var(--ease) 0.32s both;
+    margin: clamp(20px, 3.5vh, 36px) 0 0;
+    font-size: clamp(16px, 1.7vw, 19px);
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+
+  .ctas {
+    animation: var(--anim-rise) 0.9s var(--ease) 0.45s both;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: clamp(20px, 3.5vh, 34px);
+  }
+
+  .cta {
+    padding: 16px 30px;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 999px;
+    display: inline-block;
+    transition:
+      transform var(--t-lift) var(--ease),
+      background var(--t-lift),
+      color var(--t-lift);
+  }
+
+  .primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .primary:hover {
+    background: var(--accent);
+    color: var(--paper);
+    transform: translateY(-3px);
+  }
+
+  .ghost {
+    color: var(--ink);
+    padding-inline: 26px;
+    border: 1px solid var(--ink);
+  }
+
+  .ghost:hover {
+    background: var(--paper-2);
+    color: var(--ink);
+    transform: translateY(-3px);
+  }
+
+  .mark-stage {
+    display: flex;
+    justify-content: center;
+    perspective: 900px;
+  }
+
+  .mark-float {
+    animation: var(--anim-floaty) 7s ease-in-out infinite;
+  }
+
+  .mark-wrap {
+    display: inline-flex;
+    --mark-size: clamp(180px, 22vw, 330px);
+    filter: drop-shadow(0 24px 40px rgb(90 127 184 / 28%));
+    transition: transform var(--t-quick) ease-out;
+    will-change: transform;
+  }
+
+  .marquee {
+    border-top: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    overflow: hidden;
+    padding: 13px 0;
+    white-space: nowrap;
+  }
+
+  .track {
+    display: inline-flex;
+    gap: 48px;
+    animation: var(--anim-marquee) 28s linear infinite;
+    padding-inline-end: 48px;
+  }
+
+  .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .item-text {
+    font: 500 14px var(--stack-display);
+    letter-spacing: var(--tracking-marquee);
+  }
+
+  .star {
+    color: var(--accent);
+  }
+
+  @media (max-width: 900px) {
+    .stage {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(20px, 5vh, 40px);
+    }
+
+    .mark-stage {
+      order: -1;
+      justify-content: flex-start;
+    }
+
+    .mark-wrap {
+      --mark-size: clamp(120px, 34vw, 200px);
+    }
+  }
+</style>

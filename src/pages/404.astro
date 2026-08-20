@@ -1,27 +1,66 @@
 ---
-import BrandMark from '../components/brand/BrandMark.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+import SiteNav from '../components/site/SiteNav.astro';
 import { messages } from '../i18n/messages';
-import LaunchLayout from '../layouts/LaunchLayout.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 
 const t = messages.en;
 ---
 
-<LaunchLayout locale="en" messages={{ ...t, title: t.notFoundTitle }} noindex staticField>
-  <div class="fallback" data-od-id="webgl-fallback"></div>
-  <div class="shell" id="top">
-    <header class="top">
-      <a class="brand" href="/" aria-label={t.brandAria} translate="no">
-        <BrandMark />
-        <strong class="wordmark">{t.brandName}</strong>
-      </a>
-    </header>
-    <main class="stage">
-      <div class="copy">
-        <h1 class="headline">{t.notFoundHeadline}</h1>
-        <div class="cta-wrap">
-          <a class="cta" href="/">{t.notFoundHome}</a>
-        </div>
-      </div>
-    </main>
-  </div>
-</LaunchLayout>
+<SiteLayout locale="en" messages={{ ...t, title: t.notFoundTitle }} noindex>
+  <SiteNav locale="en" messages={t} />
+  <main id="main" class="lost">
+    <p class="code">404</p>
+    <h1>{t.notFoundHeadline}</h1>
+    <a class="home" href="/">{t.notFoundHome}</a>
+  </main>
+  <SiteFooter messages={t} />
+</SiteLayout>
+
+<style>
+  .lost {
+    min-height: calc(100svh - var(--nav-h));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: clamp(40px, 8vh, 96px) var(--gutter);
+    background: linear-gradient(180deg, var(--paper) 45%, var(--paper-2) 100%);
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .code {
+    margin: 0;
+    font: 700 12px var(--stack-mono);
+    letter-spacing: var(--tracking-overline);
+    color: var(--accent);
+  }
+
+  h1 {
+    margin: 0;
+    font: 600 clamp(38px, 6vw, 76px) / 1.05 var(--stack-display);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .home {
+    margin-top: 8px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 16px 30px;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 999px;
+    transition:
+      transform var(--t-lift) var(--ease),
+      background var(--t-lift);
+  }
+
+  .home:hover {
+    background: var(--accent);
+    color: var(--paper);
+    transform: translateY(-3px);
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+import { type Locale, localePath } from '../../i18n/locales';
+import { type Messages, mailHref } from '../../i18n/schema';
+import BrandMark from '../brand/BrandMark.astro';
+import LangSwitcher from '../i18n/LangSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+  messages: Messages;
+}
+
+const { locale, messages: t } = Astro.props;
+
+// Anchored to the locale home rather than bare fragments, so the bar still
+// works on pages that do not carry the bands — 404, chiefly.
+const home = localePath(locale);
+const sections = [
+  { href: `${home}#services`, label: t.navServices },
+  { href: `${home}#method`, label: t.navMethod },
+  { href: `${home}#why`, label: t.navWhy },
+  { href: `${home}#international`, label: t.navIntl },
+];
+---
+
+<header class="nav">
+  <a class="lockup" href={home} dir="ltr" aria-label={t.brandAria} translate="no">
+    <span class="lockup-mark"><BrandMark /></span>
+    <span class="wordmark">Modern Software Works<span class="dot">.</span></span>
+  </a>
+
+  <div class="tail">
+    <nav class="sections" aria-label={t.navServices}>
+      {sections.map((section) => (
+          <a class="section-link" href={section.href}>
+            {section.label}
+          </a>
+        ))}
+    </nav>
+    <span class="langs-slot"><LangSwitcher locale={locale} messages={t} /></span>
+    <a class="mail" href={mailHref()}>{t.navEmail}</a>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 12px var(--gutter);
+    border-bottom: 1px solid var(--ink);
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    --mark-size: 34px;
+  }
+
+  .lockup-mark {
+    display: inline-flex;
+    transition: transform var(--t-spin) var(--ease);
+  }
+
+  .lockup:hover .lockup-mark {
+    transform: rotate(-8deg) scale(1.12);
+  }
+
+  .wordmark {
+    font: 600 17px var(--stack-display);
+    letter-spacing: var(--tracking-wordmark);
+  }
+
+  .dot {
+    color: var(--accent-text);
+  }
+
+  .tail {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .sections {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .section-link {
+    color: var(--ink);
+  }
+
+  .section-link:hover {
+    color: var(--accent-text);
+  }
+
+  .mail {
+    color: var(--ink);
+    background: var(--wash);
+    padding: 8px 16px;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition:
+      background var(--t-quick),
+      color var(--t-quick);
+  }
+
+  .mail:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .langs-slot {
+    display: inline-flex;
+  }
+
+  /* Below 900px the bar becomes a fixed two-row grid rather than wrapping at an
+     unpredictable point: the four anchors only shortcut to sections the page
+     scrolls through anyway, and --nav-h has to match the bar's real height for
+     every band to fill the viewport it claims. */
+  @media (max-width: 900px) {
+    .nav {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      row-gap: 12px;
+      column-gap: 16px;
+    }
+
+    .sections {
+      display: none;
+    }
+
+    .tail {
+      display: contents;
+    }
+
+    .mail {
+      grid-area: 1 / 2;
+      justify-self: end;
+    }
+
+    .langs-slot {
+      grid-area: 2 / 1 / 2 / -1;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .wordmark {
+      font-size: 15px;
+    }
+
+    .lockup {
+      --mark-size: 28px;
+    }
+  }
+
+  @media (pointer: coarse) {
+    .mail {
+      padding-block: 12px;
+    }
+
+    .lockup {
+      padding-block: 6px;
+    }
+  }
+</style>

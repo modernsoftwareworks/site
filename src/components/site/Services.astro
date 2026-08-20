@@ -1,0 +1,132 @@
+---
+import type { Locale } from '../../i18n/locales';
+import type { Messages } from '../../i18n/schema';
+
+interface Props {
+  locale: Locale;
+  messages: Messages;
+}
+
+const { locale, messages: t } = Astro.props;
+
+const numerals =
+  locale === 'ar' ? ['٠١', '٠٢', '٠٣', '٠٤', '٠٥', '٠٦'] : ['01', '02', '03', '04', '05', '06'];
+---
+
+<section id="services" class="band services">
+  <div class="head reveal">
+    <h2>{t.servicesH2}</h2>
+    <p>{t.servicesLede}</p>
+  </div>
+
+  <ul class="list">
+    {t.services.map((service, index) => (
+        <li class="row">
+          <span class="n">{numerals[index]}</span>
+          <h3 class="title">{service.title}</h3>
+          <div class="body">
+            <p class="detail">{service.detail}</p>
+            <p class="audience">{service.audience}</p>
+          </div>
+        </li>
+      ))}
+  </ul>
+</section>
+
+<style>
+  .services {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .head {
+    padding: clamp(28px, 4.5vh, 64px) var(--gutter) clamp(18px, 3vh, 36px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: clamp(20px, 3vw, 48px);
+    flex-wrap: wrap;
+  }
+
+  h2 {
+    margin: 0;
+    font: 600 clamp(30px, 4vw, 52px) / 1.1 var(--stack-display);
+    letter-spacing: var(--tracking-h2);
+  }
+
+  .head p {
+    margin: 0 0 6px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 380px;
+    text-wrap: pretty;
+  }
+
+  /* 1px gaps over an ink ground draw the hairlines between rows. */
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--ink);
+    border-top: 1px solid var(--ink);
+  }
+
+  .row {
+    background: var(--paper);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px clamp(24px, 4vw, 56px);
+    padding: clamp(15px, 2.2vh, 24px) var(--gutter);
+    transition:
+      background var(--t-quick),
+      padding-inline-start var(--t-slide) var(--ease);
+    animation: var(--anim-reveal) 0.7s var(--ease) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .row:hover {
+    background: var(--paper-2);
+    padding-inline-start: clamp(32px, 5vw, 84px);
+  }
+
+  .n {
+    flex: 0 0 auto;
+    font: 500 13px var(--stack-mono);
+    color: var(--accent-text);
+  }
+
+  .title {
+    flex: 1 1 240px;
+    margin: 0;
+    font: 600 clamp(19px, 1.8vw, 25px) var(--stack-display);
+  }
+
+  .body {
+    flex: 2 1 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detail {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+
+  .audience {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--accent-text);
+  }
+</style>

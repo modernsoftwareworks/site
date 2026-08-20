@@ -9,7 +9,6 @@
     "includes": [
       "**",
       "!!**/dist",
-      "!!**/docs/design",
       "!!**/bun.lock",
       "!**/*.png",
       "!**/*.svg",

@@ -1,0 +1,325 @@
+---
+import type { Messages } from '../../i18n/schema';
+import { composeInquiry, emptyState, MESSAGE_MAX } from '../../lib/composer';
+import BrandMark from '../brand/BrandMark.astro';
+
+interface Props {
+  messages: Messages;
+}
+
+const { messages: t } = Astro.props;
+
+const initial = composeInquiry(t, emptyState);
+const copy = {
+  c1: t.c1,
+  c2: t.c2,
+  c3: t.c3,
+  c4: t.c4,
+  c5: t.c5,
+  helpLabel: t.helpLabel,
+  sendDone: t.sendDone,
+  sendAny: t.sendAny,
+  inquirySubject: t.inquirySubject,
+};
+---
+
+<section id="contact" class="contact" data-composer={JSON.stringify(copy)}>
+  <span class="watermark" aria-hidden="true"><BrandMark /></span>
+
+  <div class="inner reveal">
+    <p class="overline">CONNECT</p>
+
+    <p class="sentence">
+      <span>{t.c1}</span
+      ><span class="slot"
+        ><span class="sizer" aria-hidden="true">{t.namePh}</span>
+        <input
+          class="field"
+          type="text"
+          name="name"
+          autocomplete="name"
+          data-field="name"
+          placeholder={t.namePh}
+          aria-label={t.namePh}
+        ></span
+      ><span>{t.c2}</span
+      ><span class="slot picked"
+        ><span class="sizer" aria-hidden="true">{t.orgPh}</span
+        ><select class="field pick" name="org" data-field="org" aria-label={t.orgPh}>
+          <option value="" selected disabled>{t.orgPh}</option>
+          {t.orgs.map((org) => <option value={org}>{org}</option>)}
+        </select></span
+      ><span>{t.c3}</span
+      ><span class="slot picked"
+        ><span class="sizer" aria-hidden="true">{t.needPh}</span
+        ><select class="field pick" name="need" data-field="need" aria-label={t.needPh}>
+          <option value="" selected disabled>{t.needPh}</option>
+          {t.needs.map((need) => <option value={need}>{need}</option>)}
+        </select></span
+      ><span>{t.c4}</span
+      ><span class="slot"
+        ><span class="sizer" aria-hidden="true">{t.emailPh}</span>
+        <input
+          class="field"
+          type="email"
+          name="email"
+          autocomplete="email"
+          data-field="email"
+          placeholder={t.emailPh}
+          aria-label={t.emailPh}
+        ></span
+      ><span>{t.c5}</span>
+    </p>
+
+    <div class="help">
+      <label class="help-label" for="composer-message">{t.helpLabel}</label>
+      <textarea
+        id="composer-message"
+        name="message"
+        data-field="message"
+        rows="3"
+        maxlength={MESSAGE_MAX}
+        placeholder={t.msgPh}
+      ></textarea>
+      <p class="counter"><span data-count>00</span><span class="of">/{MESSAGE_MAX}</span></p>
+    </div>
+
+    <div class="actions">
+      <a class="send" href={initial.mailto} data-send>{initial.sendLabel}</a>
+      <span class="note">{t.composerNote}</span>
+    </div>
+
+    <p class="status"><span class="dot"></span>{t.contactStatus}</p>
+  </div>
+</section>
+
+<script>
+  import { mountComposer } from '../../scripts/composer';
+
+  mountComposer();
+</script>
+
+<style>
+  .contact {
+    min-height: calc(100svh - var(--nav-h));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: start;
+    padding: clamp(40px, 7vh, 106px) var(--gutter);
+    background: var(--ink);
+    color: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .watermark {
+    position: absolute;
+    inset-inline-end: -60px;
+    bottom: -70px;
+    --mark-size: clamp(220px, 26vw, 380px);
+    color: var(--paper);
+    opacity: 0.1;
+    animation: var(--anim-floaty) 9s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .inner {
+    position: relative;
+    max-width: 1000px;
+    width: 100%;
+    text-align: start;
+  }
+
+  .overline {
+    margin: 0 0 26px;
+    font: 700 12px var(--stack-mono);
+    letter-spacing: 0.12em;
+    color: var(--on-dark);
+  }
+
+  .sentence {
+    margin: 0;
+    font: 500 clamp(23px, 3.2vw, 42px) / 1.6 var(--stack-display);
+    letter-spacing: var(--tracking-wordmark);
+  }
+
+  /* A native control is as wide as its widest option, which strands the caret
+     mid-sentence. The hidden sizer holds the text actually showing, so each
+     field is exactly as wide as its content and the line reads as prose. */
+  .slot {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    max-width: 100%;
+  }
+
+  .sizer {
+    display: block;
+    visibility: hidden;
+    white-space: pre;
+    padding: 0 4px;
+    pointer-events: none;
+  }
+
+  /* A few px more than the control's own end padding: form controls measure
+     text slightly differently from a span and would otherwise clip the last
+     glyph against the chevron. */
+  .slot.picked .sizer {
+    padding-inline-end: 36px;
+  }
+
+  .field {
+    position: absolute;
+    inset: 0;
+    font: inherit;
+    color: var(--paper);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--accent);
+    padding: 0 4px;
+    width: 100%;
+    min-width: 0;
+    transition: border-color var(--t-quick);
+  }
+
+  .field::placeholder {
+    color: var(--ph-select);
+    opacity: 1;
+  }
+
+  textarea::placeholder {
+    color: var(--muted-3);
+    opacity: 1;
+  }
+
+  /* One authored chevron, drawn in the accent, replaces the native arrow the
+     browser draws and the ▾ the copy used to carry. It stays put once a value
+     is chosen, which the glyph did not. */
+  .pick {
+    appearance: none;
+    padding: 0 2px;
+    padding-inline-end: 30px;
+    cursor: pointer;
+    color: var(--ph-select);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' fill='none'%3E%3Cpath d='M1.6 1.9 7 7.1l5.4-5.2' stroke='%235a7fb8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 14px 9px;
+  }
+
+  :global(html[dir="rtl"]) .pick {
+    background-position: left 6px center;
+  }
+
+  .pick.is-set {
+    color: var(--paper);
+  }
+
+  .field:hover,
+  .field:focus {
+    border-color: var(--on-dark);
+  }
+
+  .help {
+    margin-top: 34px;
+    max-width: 720px;
+  }
+
+  .help-label {
+    display: block;
+    font: 700 11px var(--stack-mono);
+    letter-spacing: var(--tracking-overline);
+    color: var(--on-dark);
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgb(250 251 253 / 6%);
+    border: 1px solid var(--hair-dark);
+    color: var(--paper);
+    padding: 14px 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    resize: vertical;
+    transition: border-color var(--t-quick);
+  }
+
+  textarea:hover,
+  textarea:focus {
+    border-color: var(--on-dark);
+  }
+
+  .counter {
+    margin: 6px 0 0;
+    text-align: end;
+    font: 500 12px var(--stack-mono);
+    color: var(--muted-3);
+  }
+
+  .of {
+    color: var(--muted-ink);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+
+  .send {
+    display: inline-block;
+    background: var(--wash);
+    color: var(--ink);
+    padding: 17px 34px;
+    border-radius: 999px;
+    font: 700 16px var(--stack-body);
+    transition:
+      transform var(--t-lift) var(--ease),
+      background var(--t-lift);
+  }
+
+  .send:hover {
+    background: #fff;
+    color: var(--ink);
+    transform: scale(1.05);
+  }
+
+  .note {
+    font-size: 13.5px;
+    color: var(--muted-3);
+  }
+
+  .status {
+    margin: 26px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14.5px;
+    color: var(--on-dark);
+  }
+
+  @media (pointer: coarse) {
+    .field {
+      padding-block: 7px;
+    }
+
+    .send {
+      padding-block: 19px;
+    }
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--on-dark);
+    flex: none;
+  }
+</style>

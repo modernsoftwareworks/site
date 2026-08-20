@@ -1,0 +1,41 @@
+---
+import type { Locale } from '../../i18n/locales';
+import { messages } from '../../i18n/messages';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Contact from './Contact.astro';
+import Hero from './Hero.astro';
+import International from './International.astro';
+import Method from './Method.astro';
+import Services from './Services.astro';
+import SiteFooter from './SiteFooter.astro';
+import SiteNav from './SiteNav.astro';
+import WhyUs from './WhyUs.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+---
+
+<SiteLayout locale={locale} messages={t}>
+  <SiteNav locale={locale} messages={t} />
+  <main id="main">
+    <Hero messages={t} />
+    <Services locale={locale} messages={t} />
+    <Method messages={t} />
+    <WhyUs messages={t} />
+    <International locale={locale} messages={t} />
+    <Contact messages={t} />
+  </main>
+  <SiteFooter messages={t} />
+</SiteLayout>
+
+<script is:inline define:vars={{ locale }}>
+  try {
+    localStorage.setItem('msw-lang', locale);
+  } catch {
+    // Private mode or blocked storage.
+  }
+</script>

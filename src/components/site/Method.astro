@@ -1,0 +1,89 @@
+---
+import type { Messages } from '../../i18n/schema';
+
+interface Props {
+  messages: Messages;
+}
+
+const { messages: t } = Astro.props;
+---
+
+<section id="method" class="band method">
+  <div class="reveal">
+    <h2>{t.methodH2a}<br>{t.methodH2b}</h2>
+    <p class="lede">{t.methodLede}</p>
+  </div>
+
+  <ol class="steps">
+    {t.steps.map((step) => (
+        <li class="step">
+          <span class="label">{step.label}</span>
+          <p class="text">
+            <strong>{step.title}</strong> <span>{step.detail}</span>
+          </p>
+        </li>
+      ))}
+  </ol>
+</section>
+
+<style>
+  .method {
+    padding: clamp(32px, 5vh, 84px) var(--gutter);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: clamp(24px, 4vw, 64px);
+    align-content: center;
+  }
+
+  h2 {
+    margin: 0 0 22px;
+    font: 600 clamp(30px, 4vw, 52px) / 1.1 var(--stack-display);
+    letter-spacing: var(--tracking-h2);
+  }
+
+  .lede {
+    margin: 0;
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 380px;
+  }
+
+  .steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step {
+    display: flex;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--hair);
+    align-items: baseline;
+    animation: var(--anim-reveal) 0.7s var(--ease) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  .label {
+    font: 700 12px var(--stack-mono);
+    color: var(--accent-text);
+    flex: none;
+  }
+
+  .text {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .text strong {
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 17px;
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+import type { Messages } from '../../i18n/schema';
+
+interface Props {
+  messages: Messages;
+}
+
+const { messages: t } = Astro.props;
+---
+
+<section id="why" class="band why">
+  <h2 class="reveal">{t.whyH2}</h2>
+
+  <div class="grid">
+    {t.reasons.map((reason) => (
+        <article class="reason">
+          <h3>{reason.title}</h3>
+          <p>{reason.detail}</p>
+        </article>
+      ))}
+  </div>
+</section>
+
+<style>
+  .why {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(32px, 5vh, 84px) var(--gutter);
+    background: var(--paper-2);
+  }
+
+  h2 {
+    margin: 0 0 clamp(24px, 4.5vh, 48px);
+    font: 600 clamp(30px, 4vw, 52px) / 1.1 var(--stack-display);
+    letter-spacing: var(--tracking-h2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: clamp(24px, 4vw, 56px);
+  }
+
+  .reason {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: var(--anim-reveal) 0.8s var(--ease) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+
+  .reason h3 {
+    margin: 0;
+    font: 600 clamp(20px, 1.9vw, 24px) var(--stack-display);
+  }
+
+  .reason p {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 44ch;
+  }
+</style>

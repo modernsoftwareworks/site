@@ -10,14 +10,14 @@ interface Props {
 const { locale, messages } = Astro.props;
 ---
 
-<nav class="langs" data-od-id="lang-switcher" aria-label={messages.langLabel}>
+<nav class="langs" aria-label={messages.langLabel}>
   {locales.map((code) => (
       <a
+        class:list={['pill', { current: code === locale }]}
         href={localePath(code)}
         hreflang={code}
         lang={code}
         data-lang={code}
-        data-od-id={`lang-${code}`}
         data-astro-prefetch={code === locale ? 'false' : 'hover'}
         aria-current={code === locale ? 'page' : undefined}
       >
@@ -31,3 +31,42 @@ const { locale, messages } = Astro.props;
 
   persistLocaleOnSwitch();
 </script>
+
+<style>
+  .langs {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .pill {
+    font: 700 11px var(--stack-mono);
+    padding: 5px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--hair);
+    color: var(--muted);
+    user-select: none;
+    white-space: nowrap;
+    transition:
+      background var(--t-quick),
+      color var(--t-quick),
+      border-color var(--t-quick);
+  }
+
+  .pill:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  @media (pointer: coarse) {
+    .pill {
+      padding-block: 10px;
+    }
+  }
+
+  .pill.current {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+</style>
