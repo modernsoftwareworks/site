@@ -17,6 +17,7 @@
     "format": "biome format --write .",
     "deadcode": "fallow dead-code",
     "og": "bun scripts/render-og.mjs",
+    "audit": "bun audit",
     "test": "vitest run",
     "verify": "astro check && biome check . && fallow dead-code && vitest run && astro build",
     "deploy": "astro build && wrangler deploy",

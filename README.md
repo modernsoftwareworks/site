@@ -14,12 +14,13 @@ bun run test
 bun run lint
 bun run check
 bun run deadcode
+bun run audit
 bun run verify
 ```
 
 Toolchain is native binaries, one job each:
 
-- **Bun** — package manager and runtime
+- **Bun** — package manager and runtime (`bun run audit` checks the tree against the advisory database; the lockfile is Bun 1.4's `lockfileVersion: 2`)
 - **Biome** — lint + format for `.astro`, TypeScript, CSS, JSON (replaces ESLint + Prettier)
 - **Fallow** — unused code, deps, cycles (`bun run deadcode`; `bunx fallow` also reports dupes and health)
 - **Lefthook** — git hooks (replaces husky / simple-git-hooks + lint-staged)
