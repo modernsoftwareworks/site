@@ -30,45 +30,49 @@ const copy = {
     <p class="overline">CONNECT</p>
 
     <p class="sentence">
-      <span>{t.c1}</span
+      <span class="join">{t.c1}</span
       ><span class="slot"
+        ><label class="field-label" for="composer-name">{t.namePh}</label
         ><span class="sizer" aria-hidden="true">{t.namePh}</span>
         <input
+          id="composer-name"
           class="field"
           type="text"
           name="name"
           autocomplete="name"
           data-field="name"
           placeholder={t.namePh}
-          aria-label={t.namePh}
         ></span
-      ><span>{t.c2}</span
+      ><span class="join">{t.c2}</span
       ><span class="slot picked"
+        ><label class="field-label" for="composer-org">{t.orgPh}</label
         ><span class="sizer" aria-hidden="true">{t.orgPh}</span
-        ><select class="field pick" name="org" data-field="org" aria-label={t.orgPh}>
+        ><select id="composer-org" class="field pick" name="org" data-field="org">
           <option value="" selected disabled>{t.orgPh}</option>
           {t.orgs.map((org) => <option value={org}>{org}</option>)}
         </select></span
-      ><span>{t.c3}</span
+      ><span class="join">{t.c3}</span
       ><span class="slot picked"
+        ><label class="field-label" for="composer-need">{t.needPh}</label
         ><span class="sizer" aria-hidden="true">{t.needPh}</span
-        ><select class="field pick" name="need" data-field="need" aria-label={t.needPh}>
+        ><select id="composer-need" class="field pick" name="need" data-field="need">
           <option value="" selected disabled>{t.needPh}</option>
           {t.needs.map((need) => <option value={need}>{need}</option>)}
         </select></span
-      ><span>{t.c4}</span
+      ><span class="join">{t.c4}</span
       ><span class="slot"
+        ><label class="field-label" for="composer-email">{t.emailPh}</label
         ><span class="sizer" aria-hidden="true">{t.emailPh}</span>
         <input
+          id="composer-email"
           class="field"
           type="email"
           name="email"
           autocomplete="email"
           data-field="email"
           placeholder={t.emailPh}
-          aria-label={t.emailPh}
         ></span
-      ><span>{t.c5}</span>
+      ><span class="join">{t.c5}</span>
     </p>
 
     <div class="help">
@@ -119,7 +123,7 @@ const copy = {
     position: absolute;
     inset-inline-end: -60px;
     bottom: -70px;
-    --mark-size: clamp(220px, 26vw, 380px);
+    --mark-size: clamp(160px, 4rem + 22vw, 380px);
     color: var(--paper);
     opacity: 0.1;
     animation: var(--anim-floaty) 9s ease-in-out infinite;
@@ -142,7 +146,7 @@ const copy = {
 
   .sentence {
     margin: 0;
-    font: 500 clamp(23px, 3.2vw, 42px) / 1.6 var(--stack-display);
+    font: 500 var(--step-sentence) / 1.6 var(--stack-display);
     letter-spacing: var(--tracking-wordmark);
   }
 
@@ -162,6 +166,20 @@ const copy = {
     white-space: pre;
     padding: 0 4px;
     pointer-events: none;
+  }
+
+  /* The sentence names each field while it reads as prose, so the label is only
+     exposed to assistive tech here. Below 640px it becomes the visible label. */
+  .field-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 
   /* A few px more than the control's own end padding: form controls measure
@@ -218,7 +236,6 @@ const copy = {
     color: var(--paper);
   }
 
-  .field:hover,
   .field:focus {
     border-color: var(--on-dark);
   }
@@ -243,13 +260,12 @@ const copy = {
     border: 1px solid var(--hair-dark);
     color: var(--paper);
     padding: 14px 16px;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.6;
     resize: vertical;
     transition: border-color var(--t-quick);
   }
 
-  textarea:hover,
   textarea:focus {
     border-color: var(--on-dark);
   }
@@ -285,10 +301,17 @@ const copy = {
       background var(--t-lift);
   }
 
-  .send:hover {
-    background: #fff;
-    color: var(--ink);
-    transform: scale(1.05);
+  @media (hover: hover) {
+    .field:hover,
+    textarea:hover {
+      border-color: var(--on-dark);
+    }
+
+    .send:hover {
+      background: #fff;
+      color: var(--ink);
+      transform: scale(1.05);
+    }
   }
 
   .note {
@@ -299,15 +322,17 @@ const copy = {
   .status {
     margin: 26px 0 0;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
     font-size: 14.5px;
     color: var(--on-dark);
   }
 
+  /* `inset: 0` fixes the field to the line box, so padding could never grow it —
+     the line height is the only lever that lifts these past 44px. */
   @media (pointer: coarse) {
-    .field {
-      padding-block: 7px;
+    .sentence {
+      line-height: 1.95;
     }
 
     .send {
@@ -321,5 +346,75 @@ const copy = {
     border-radius: 50%;
     background: var(--on-dark);
     flex: none;
+    translate: 0 -2px;
+  }
+
+  /* Below 640px the sentence cannot hold: at 19px on a 280px line, the longest
+     French and Italian options measure wider than the line, so each slot was
+     clamping to full width and the select truncated its own text against the
+     chevron. The fragments give way to labelled rows — same copy, same mailto. */
+  @media (max-width: 640px) {
+    .sentence {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      font-size: clamp(17px, 1rem + 0.5vw, 21px);
+      line-height: 1.3;
+    }
+
+    .join {
+      display: none;
+    }
+
+    .slot {
+      position: static;
+      display: block;
+      width: 100%;
+    }
+
+    .sizer {
+      display: none;
+    }
+
+    .field-label {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0 0 6px;
+      overflow: visible;
+      clip-path: none;
+      display: block;
+      font: 700 11px var(--stack-mono);
+      letter-spacing: var(--tracking-overline);
+      text-transform: uppercase;
+      color: var(--on-dark);
+    }
+
+    .field {
+      position: static;
+      width: 100%;
+      min-height: 44px;
+      padding: 0 2px;
+      border-bottom-width: 1px;
+      border-color: var(--hair-dark);
+    }
+
+    /* The visible label already says it; repeating it inside the input is
+       noise. A select still needs its empty option, which is conventional. */
+    .field::placeholder {
+      color: transparent;
+    }
+
+    .pick {
+      background-position: right 2px center;
+    }
+
+    :global(html[dir="rtl"]) .pick {
+      background-position: left 2px center;
+    }
+
+    .overline {
+      margin-bottom: 20px;
+    }
   }
 </style>

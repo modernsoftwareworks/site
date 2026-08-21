@@ -1,12 +1,15 @@
 ---
+import type { Locale } from '../../i18n/locales';
 import type { Messages } from '../../i18n/schema';
 import BrandMark from '../brand/BrandMark.astro';
+import LangSwitcher from '../i18n/LangSwitcher.astro';
 
 interface Props {
+  locale: Locale;
   messages: Messages;
 }
 
-const { messages: t } = Astro.props;
+const { locale, messages: t } = Astro.props;
 ---
 
 <footer class="footer">
@@ -14,13 +17,15 @@ const { messages: t } = Astro.props;
     <BrandMark />
     <span>Modern Software Works<span class="dot">.</span></span>
   </span>
-  <span>{t.footerTag}</span>
+  <span class="tag">{t.footerTag}</span>
+  <span class="langs-slot"><LangSwitcher locale={locale} messages={t} /></span>
 </footer>
 
 <style>
   .footer {
     scroll-snap-align: end;
     padding: 20px var(--gutter);
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,5 +49,27 @@ const { messages: t } = Astro.props;
 
   .dot {
     color: var(--accent-text);
+  }
+
+  /* The locale pills live in the sticky bar on a desktop and here on a phone.
+     Only one of the two is ever rendered, so assistive tech sees a single
+     language navigation rather than a duplicate landmark. */
+  .langs-slot {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      padding-block: 28px;
+      padding-bottom: max(28px, env(safe-area-inset-bottom, 0px));
+    }
+
+    .langs-slot {
+      display: inline-flex;
+      order: -1;
+    }
   }
 </style>

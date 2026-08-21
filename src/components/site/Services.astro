@@ -51,7 +51,7 @@ const numerals =
 
   h2 {
     margin: 0;
-    font: 600 clamp(30px, 4vw, 52px) / 1.1 var(--stack-display);
+    font: 600 var(--step-h2) / 1.1 var(--stack-display);
     letter-spacing: var(--tracking-h2);
   }
 
@@ -91,9 +91,13 @@ const numerals =
     animation-range: entry 0% entry 35%;
   }
 
-  .row:hover {
-    background: var(--paper-2);
-    padding-inline-start: clamp(32px, 5vw, 84px);
+  /* Gated: on a touch screen :hover latches after a tap and the row would
+     stay tinted and indented for the rest of the session. */
+  @media (hover: hover) {
+    .row:hover {
+      background: var(--paper-2);
+      padding-inline-start: clamp(32px, 5vw, 84px);
+    }
   }
 
   .n {
@@ -103,13 +107,15 @@ const numerals =
   }
 
   .title {
-    flex: 1 1 240px;
+    flex: 1 1 min(100%, 240px);
+    min-width: 0;
     margin: 0;
-    font: 600 clamp(19px, 1.8vw, 25px) var(--stack-display);
+    font: 600 var(--step-h3) var(--stack-display);
   }
 
   .body {
-    flex: 2 1 340px;
+    flex: 2 1 min(100%, 340px);
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 4px;

@@ -81,13 +81,13 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
 
   h2 {
     margin: 0;
-    font: 600 clamp(30px, 4vw, 52px) / 1.1 var(--stack-display);
+    font: 600 var(--step-h2) / 1.1 var(--stack-display);
     letter-spacing: var(--tracking-h2);
   }
 
   .head p {
     margin: 0 0 8px;
-    font-size: 16.5px;
+    font-size: var(--step-lede);
     line-height: 1.65;
     color: var(--muted);
     max-width: 440px;
@@ -112,9 +112,11 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
     transition: background var(--t-quick);
   }
 
-  .card:hover {
-    background: var(--paper-2);
-    color: var(--ink);
+  @media (hover: hover) {
+    .card:hover {
+      background: var(--paper-2);
+      color: var(--ink);
+    }
   }
 
   .region {

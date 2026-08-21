@@ -99,7 +99,8 @@ const prefixed = locales.filter((code) => code !== defaultLocale);
       const path = location.pathname.replace(/\/+$/, '') || '/';
       if (path !== '/') return;
       const saved = localStorage.getItem('msw-lang');
-      if (saved && prefixed.includes(saved)) location.replace(`/${saved}/`);
+      if (saved && prefixed.includes(saved))
+        location.replace(`/${saved}/${location.search}${location.hash}`);
     } catch {
       // Private mode or blocked storage.
     }

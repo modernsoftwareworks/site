@@ -35,7 +35,8 @@ const { locale, messages } = Astro.props;
 <style>
   .langs {
     display: flex;
-    gap: 5px;
+    flex-wrap: wrap;
+    gap: 6px;
     align-items: center;
   }
 
@@ -53,14 +54,19 @@ const { locale, messages } = Astro.props;
       border-color var(--t-quick);
   }
 
-  .pill:hover {
-    color: var(--ink);
-    border-color: var(--ink);
+  @media (hover: hover) {
+    .pill:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
   }
 
   @media (pointer: coarse) {
     .pill {
-      padding-block: 10px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-block: 0;
     }
   }
 

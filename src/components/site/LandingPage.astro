@@ -29,7 +29,7 @@ const t = messages[locale];
     <International locale={locale} messages={t} />
     <Contact messages={t} />
   </main>
-  <SiteFooter messages={t} />
+  <SiteFooter locale={locale} messages={t} />
 </SiteLayout>
 
 <script is:inline define:vars={{ locale }}>

@@ -14,7 +14,7 @@ const t = messages.en;
     <h1>{t.notFoundHeadline}</h1>
     <a class="home" href="/">{t.notFoundHome}</a>
   </main>
-  <SiteFooter messages={t} />
+  <SiteFooter locale="en" messages={t} />
 </SiteLayout>
 
 <style>
@@ -40,7 +40,7 @@ const t = messages.en;
 
   h1 {
     margin: 0;
-    font: 600 clamp(38px, 6vw, 76px) / 1.05 var(--stack-display);
+    font: 600 clamp(30px, 1.054rem + 4.107vw, 76px) / 1.05 var(--stack-display);
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
   }
@@ -58,9 +58,17 @@ const t = messages.en;
       background var(--t-lift);
   }
 
-  .home:hover {
-    background: var(--accent);
-    color: var(--paper);
-    transform: translateY(-3px);
+  @media (hover: hover) {
+    .home:hover {
+      background: var(--accent);
+      color: var(--paper);
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .lost {
+      min-height: calc(100svh - var(--nav-h) - 140px);
+    }
   }
 </style>

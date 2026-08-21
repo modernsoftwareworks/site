@@ -68,7 +68,7 @@ const marquee = [...t.services, ...t.services];
   .stage {
     flex: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr);
+    grid-template-columns: minmax(0, 1.5fr) minmax(min(100%, 220px), 1fr);
     gap: clamp(24px, 4vw, 64px);
     align-items: center;
     padding: clamp(32px, 5vh, 72px) var(--gutter);
@@ -76,14 +76,18 @@ const marquee = [...t.services, ...t.services];
 
   .headline {
     margin: 0;
-    font: 600 clamp(42px, 6.4vw, 88px) / 1.04 var(--stack-display);
+    font: 600 var(--step-h1) / 1.04 var(--stack-display);
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
   }
 
+  /* Masks the `rise` keyframe's translateY(110%). The clip margin keeps the
+     highlight pill's rounded box from being shaved at small sizes without
+     revealing the line before it arrives. */
   .clip {
     display: block;
-    overflow: hidden;
+    overflow: clip;
+    overflow-clip-margin: 0.12em;
   }
 
   .clip + .clip {
@@ -114,7 +118,7 @@ const marquee = [...t.services, ...t.services];
   .lede {
     animation: var(--anim-rise) 0.9s var(--ease) 0.32s both;
     margin: clamp(20px, 3.5vh, 36px) 0 0;
-    font-size: clamp(16px, 1.7vw, 19px);
+    font-size: var(--step-lede);
     line-height: 1.65;
     color: var(--muted);
     max-width: 56ch;
@@ -147,22 +151,24 @@ const marquee = [...t.services, ...t.services];
     color: var(--paper);
   }
 
-  .primary:hover {
-    background: var(--accent);
-    color: var(--paper);
-    transform: translateY(-3px);
-  }
-
   .ghost {
     color: var(--ink);
     padding-inline: 26px;
     border: 1px solid var(--ink);
   }
 
-  .ghost:hover {
-    background: var(--paper-2);
-    color: var(--ink);
-    transform: translateY(-3px);
+  @media (hover: hover) {
+    .primary:hover {
+      background: var(--accent);
+      color: var(--paper);
+      transform: translateY(-3px);
+    }
+
+    .ghost:hover {
+      background: var(--paper-2);
+      color: var(--ink);
+      transform: translateY(-3px);
+    }
   }
 
   .mark-stage {
@@ -226,7 +232,31 @@ const marquee = [...t.services, ...t.services];
     }
 
     .mark-wrap {
-      --mark-size: clamp(120px, 34vw, 200px);
+      --mark-size: clamp(96px, 3rem + 14vw, 180px);
+    }
+
+    /* Without the full-height floor the grid no longer has spare room to
+       distribute, which is what was leaving ~400px of dead air at tablet width. */
+    .hero {
+      min-height: 0;
+    }
+
+    .stage {
+      flex: none;
+      padding-block: clamp(28px, 6vw, 56px);
+    }
+  }
+
+  /* Stacked, content-width buttons read as ragged; at this size they are the
+     two primary actions and should present as one block. */
+  @media (max-width: 480px) {
+    .ctas {
+      gap: 10px;
+    }
+
+    .cta {
+      flex: 1 1 100%;
+      text-align: center;
     }
   }
 </style>

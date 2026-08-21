@@ -42,6 +42,10 @@ const sections = [
 </header>
 
 <style>
+  /* min-height pinned to --nav-h makes the token true by construction: every
+     band's `calc(100svh - var(--nav-h))` and scroll-padding-top then match the
+     bar that is actually on screen. The bar must therefore never wrap, which is
+     what the nowrap and the breakpoints below are for. */
   .nav {
     position: sticky;
     top: 0;
@@ -50,7 +54,7 @@ const sections = [
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    flex-wrap: wrap;
+    min-height: var(--nav-h);
     padding: 12px var(--gutter);
     border-bottom: 1px solid var(--ink);
     background: color-mix(in srgb, var(--paper) 90%, transparent);
@@ -61,6 +65,7 @@ const sections = [
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
     color: var(--ink);
     --mark-size: 34px;
   }
@@ -70,13 +75,10 @@ const sections = [
     transition: transform var(--t-spin) var(--ease);
   }
 
-  .lockup:hover .lockup-mark {
-    transform: rotate(-8deg) scale(1.12);
-  }
-
   .wordmark {
     font: 600 17px var(--stack-display);
     letter-spacing: var(--tracking-wordmark);
+    white-space: nowrap;
   }
 
   .dot {
@@ -101,8 +103,14 @@ const sections = [
     color: var(--ink);
   }
 
-  .section-link:hover {
-    color: var(--accent-text);
+  .langs-slot {
+    display: inline-flex;
+  }
+
+  /* In the bar the pills must never wrap — a second row would put the real
+     height above --nav-h. In the footer they are free to. */
+  .langs-slot :global(.langs) {
+    flex-wrap: nowrap;
   }
 
   .mail {
@@ -116,63 +124,77 @@ const sections = [
       color var(--t-quick);
   }
 
-  .mail:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .langs-slot {
-    display: inline-flex;
-  }
-
-  /* Below 900px the bar becomes a fixed two-row grid rather than wrapping at an
-     unpredictable point: the four anchors only shortcut to sections the page
-     scrolls through anyway, and --nav-h has to match the bar's real height for
-     every band to fill the viewport it claims. */
-  @media (max-width: 900px) {
-    .nav {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      row-gap: 12px;
-      column-gap: 16px;
+  @media (hover: hover) {
+    .lockup:hover .lockup-mark {
+      transform: rotate(-8deg) scale(1.12);
     }
 
+    .section-link:hover {
+      color: var(--accent-text);
+    }
+
+    .mail:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+  }
+
+  /* The anchors are the first thing to go: they only shortcut to bands the page
+     scrolls through anyway. */
+  @media (max-width: 1100px) {
     .sections {
       display: none;
     }
+  }
 
-    .tail {
-      display: contents;
-    }
-
-    .mail {
-      grid-area: 1 / 2;
-      justify-self: end;
+  /* One compact row below 900px. The five locale pills move to the footer —
+     together with the anchors they were costing up to 70px of every screen. */
+  @media (max-width: 900px) {
+    .nav {
+      gap: 12px;
+      padding-block: 7px;
     }
 
     .langs-slot {
-      grid-area: 2 / 1 / 2 / -1;
-    }
-  }
-
-  @media (max-width: 560px) {
-    .wordmark {
-      font-size: 15px;
+      display: none;
     }
 
-    .lockup {
-      --mark-size: 28px;
-    }
-  }
-
-  @media (pointer: coarse) {
+    .lockup,
     .mail {
-      padding-block: 12px;
+      min-height: 44px;
+    }
+
+    .mail {
+      display: inline-flex;
+      align-items: center;
     }
 
     .lockup {
-      padding-block: 6px;
+      --mark-size: 26px;
+    }
+
+    .wordmark {
+      font-size: 14px;
+    }
+
+    .tail {
+      gap: 12px;
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .mail {
+      padding: 8px 14px;
+    }
+  }
+
+  /* Narrower than this the wordmark cannot share the row with the longest
+     locale's CTA without wrapping, and a wrapped bar breaks --nav-h. The
+     monogram carries the brand alone; the link keeps its aria-label. */
+  @media (max-width: 359px) {
+    .wordmark {
+      display: none;
     }
   }
 </style>

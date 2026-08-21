@@ -33,7 +33,23 @@
   --tracking-eyebrow: 0.08em;
   --tracking-overline: 0.12em;
 
-  --gutter: clamp(20px, 4vw, 64px);
+  /* Type steps ramp from 320px to 1440px. The canvas's own `Nvw` middle terms
+     only overtook their minimum somewhere past 650px, so every phone rendered at
+     the floor and the scale did no work; these carry an intercept so the ramp
+     starts at the narrowest screen. Each maximum is the canvas value unchanged. */
+  --step-h1: clamp(34px, 1.161rem + 4.821vw, 88px);
+  --step-h2: clamp(26px, 1.161rem + 2.321vw, 52px);
+  --step-h3: clamp(18px, 1rem + 0.625vw, 25px);
+  --step-lede: clamp(16px, 0.946rem + 0.268vw, 19px);
+  --step-sentence: clamp(19px, 0.777rem + 2.054vw, 42px);
+
+  /* `viewport-fit=cover` is set in Head.astro, so the gutter has to clear the
+     notch when the device is held in landscape. */
+  --gutter: max(
+    clamp(20px, 0.464rem + 3.929vw, 64px),
+    env(safe-area-inset-left, 0px),
+    env(safe-area-inset-right, 0px)
+  );
   --nav-h: 62px;
   --ease: cubic-bezier(0.2, 0.7, 0, 1);
 
@@ -75,12 +91,6 @@ html[lang="ar"] {
   box-sizing: border-box;
 }
 
-@media (max-width: 900px) {
-  :root {
-    --nav-h: 100px;
-  }
-}
-
 html {
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
@@ -102,10 +112,6 @@ body {
 a {
   color: var(--accent-text);
   text-decoration: none;
-}
-
-a:hover {
-  color: var(--accent-dk);
 }
 
 ::selection {
@@ -135,11 +141,14 @@ select option {
   border-radius: 4px;
 }
 
+/* Parked above the viewport rather than 9999px to the inline-start, which in the
+   Arabic build resolved to `right: -9999px` and overflowed the page. */
 .skip {
   position: absolute;
-  inset-inline-start: -9999px;
+  inset-inline-start: var(--gutter);
   top: 0;
   z-index: 100;
+  transform: translateY(-150%);
   padding: 12px 18px;
   min-height: 44px;
   display: inline-flex;
@@ -151,7 +160,7 @@ select option {
 }
 
 .skip:focus {
-  inset-inline-start: 0;
+  transform: translateY(0);
   color: var(--paper);
 }
 
@@ -173,6 +182,30 @@ select option {
   box-sizing: border-box;
   scroll-snap-align: start;
   border-bottom: 1px solid var(--ink);
+}
+
+/* Below 900px the one-band-per-screen system stops being true: a phone cannot
+   hold six service rows or four locale cards in a viewport, and a mobile URL bar
+   resizing `svh` moves every snap point mid-scroll. Sections flow instead. */
+@media (max-width: 900px) {
+  :root {
+    --nav-h: 60px;
+  }
+
+  html {
+    scroll-snap-type: none;
+  }
+
+  .band {
+    min-height: 0;
+    scroll-snap-align: none;
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    color: var(--accent-dk);
+  }
 }
 
 @keyframes rise {
