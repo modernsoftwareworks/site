@@ -1,7 +1,8 @@
 ---
 import { type Locale, localePath } from '../../i18n/locales';
-import { type Messages, mailHref } from '../../i18n/schema';
+import { type Messages, mailHref, waHref } from '../../i18n/schema';
 import BrandMark from '../brand/BrandMark.astro';
+import WhatsAppMark from '../brand/WhatsAppMark.astro';
 import LangSwitcher from '../i18n/LangSwitcher.astro';
 
 interface Props {
@@ -37,6 +38,9 @@ const sections = [
         ))}
     </nav>
     <span class="langs-slot"><LangSwitcher locale={locale} messages={t} /></span>
+    <a class="wa" href={waHref()} aria-label={t.waChat} title={t.waChat}>
+      <WhatsAppMark />
+    </a>
     <a class="mail" href={mailHref()}>{t.navEmail}</a>
   </div>
 </header>
@@ -113,6 +117,17 @@ const sections = [
     flex-wrap: nowrap;
   }
 
+  .wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: 999px;
+    color: var(--ink);
+    transition: background var(--t-quick);
+  }
+
   .mail {
     color: var(--ink);
     background: var(--wash);
@@ -137,6 +152,10 @@ const sections = [
       background: var(--ink);
       color: var(--paper);
     }
+
+    .wa:hover {
+      background: var(--paper-2);
+    }
   }
 
   /* The anchors are the first thing to go: they only shortcut to bands the page
@@ -160,8 +179,13 @@ const sections = [
     }
 
     .lockup,
-    .mail {
+    .mail,
+    .wa {
       min-height: 44px;
+    }
+
+    .wa {
+      inline-size: 44px;
     }
 
     .mail {
@@ -189,10 +213,12 @@ const sections = [
     }
   }
 
-  /* Narrower than this the wordmark cannot share the row with the longest
-     locale's CTA without wrapping, and a wrapped bar breaks --nav-h. The
-     monogram carries the brand alone; the link keeps its aria-label. */
-  @media (max-width: 359px) {
+  /* Measured: monogram + wordmark + both channels needs 357-405px depending on
+     locale, against 317-381px available between 360 and 430. Something has to
+     give, and on a phone two live contact channels beat a wordmark sitting next
+     to the monogram that already carries the brand. The link keeps its
+     aria-label, so the name is still announced. */
+  @media (max-width: 480px) {
     .wordmark {
       display: none;
     }
