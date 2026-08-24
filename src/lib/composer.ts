@@ -1,5 +1,5 @@
 import type { Messages } from '../i18n/schema';
-import { mailHref } from '../i18n/schema';
+import { mailHref, waHref } from '../i18n/schema';
 
 export const MESSAGE_MAX = 1000;
 
@@ -24,6 +24,7 @@ export type ComposedInquiry = {
   subject: string;
   body: string;
   mailto: string;
+  whatsapp: string;
   sendLabel: string;
   complete: boolean;
 };
@@ -64,6 +65,7 @@ export function composeInquiry(copy: ComposerCopy, state: ComposerState): Compos
     subject,
     body,
     mailto: mailHref(subject, body),
+    whatsapp: waHref(body),
     sendLabel: complete ? copy.sendDone : copy.sendAny,
     complete,
   };

@@ -76,6 +76,24 @@ describe('composeInquiry', () => {
     expect(params.get('body')).toBe(result.body);
   });
 
+  it('offers the same sentence over WhatsApp as over email', () => {
+    const state = {
+      name: 'Ada',
+      org: 'clinic or salon',
+      need: 'scheduling software',
+      email: 'ada@example.com',
+      message: 'We double-book every Friday.',
+    };
+    const result = composeInquiry(en, state);
+    const text = new URL(result.whatsapp).searchParams.get('text');
+
+    expect(result.whatsapp.startsWith('https://wa.me/modernsoftwareworks?text=')).toBe(true);
+    // The body is the shared payload; only the subject is email-specific.
+    expect(text).toBe(result.body);
+    expect(text).toContain('Ada');
+    expect(text).toContain('We double-book every Friday.');
+  });
+
   it('composes in the locale it is given', () => {
     const ja = composeInquiry(messages.ja, { ...emptyState, name: '田中' });
     expect(ja.sentence.startsWith('こんにちは、田中 と申します。')).toBe(true);
