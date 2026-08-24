@@ -71,6 +71,8 @@ export type Messages = {
   msgPh: string;
   sendDone: string;
   sendAny: string;
+  waSend: string;
+  waChat: string;
   composerNote: string;
   contactStatus: string;
   orgs: readonly [string, string, string, string, string];
@@ -84,6 +86,21 @@ export type Messages = {
   notFoundHeadline: string;
   notFoundHome: string;
 };
+
+/**
+ * WhatsApp Click to Chat. `wa.me/<username>` resolves as `type=username` and
+ * carries `text` through intact — verified against the live endpoint, including
+ * newlines and non-ASCII. A phone number would go in the same position, digits
+ * only: dashes resolve to `not_found`.
+ */
+export function waHref(text?: string): string {
+  const base = `https://wa.me/${SITE.whatsapp}`;
+  if (!text) {
+    return base;
+  }
+  const params = new URLSearchParams({ text });
+  return `${base}?${params.toString().replace(/\+/g, '%20')}`;
+}
 
 export function mailHref(subject?: string, body?: string): string {
   const params = new URLSearchParams();

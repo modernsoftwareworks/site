@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defaultLocale, isLocale, localeDir, localePath, locales } from './locales';
 import { messages } from './messages';
-import { mailHref } from './schema';
+import { mailHref, waHref } from './schema';
 
 /** Recursive key shape, so nested service/step/reason objects are compared too. */
 function shape(value: unknown): unknown {
@@ -80,6 +80,24 @@ describe('localePath', () => {
     expect(localePath('fr')).toBe('/fr/');
     expect(localePath('ar')).toBe('/ar/');
     expect(localePath('ja', '/work')).toBe('/ja/work/');
+  });
+});
+
+describe('waHref', () => {
+  it('links to the username without an @ and with no text', () => {
+    expect(waHref()).toBe('https://wa.me/modernsoftwareworks');
+  });
+
+  it('percent-encodes the prefilled message, spaces and newlines included', () => {
+    const href = waHref('Hello there\n\n— modernsoftware.works');
+    expect(href.startsWith('https://wa.me/modernsoftwareworks?text=')).toBe(true);
+    expect(href).toContain('Hello%20there%0A%0A');
+    expect(href).not.toContain('+');
+  });
+
+  it('round-trips the text through the query string', () => {
+    const message = 'I run a clinic & need help with scheduling. Reach me at a@b.com.';
+    expect(new URL(waHref(message)).searchParams.get('text')).toBe(message);
   });
 });
 

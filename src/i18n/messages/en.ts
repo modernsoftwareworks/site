@@ -132,6 +132,8 @@ export const en = {
   msgPh: "Let's save something to talk about in person.",
   sendDone: "Send it — the email's already written ↗",
   sendAny: "Send anyway — we'll figure it out ↗",
+  waSend: 'Send on WhatsApp ↗',
+  waChat: 'Chat with us on WhatsApp',
   composerNote:
     'Opens your email app with the sentence written for you · We reply within one business day',
   contactStatus: 'Taking new projects for Q3 2026 · We reply within one business day',

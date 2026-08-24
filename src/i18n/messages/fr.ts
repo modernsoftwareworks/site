@@ -134,6 +134,8 @@ export const fr = {
   msgPh: 'Gardons quelque chose à se raconter de vive voix.',
   sendDone: "Envoyez — l'email est déjà écrit ↗",
   sendAny: "Envoyez quand même — on s'en occupe ↗",
+  waSend: 'Envoyer sur WhatsApp ↗',
+  waChat: 'Écrivez-nous sur WhatsApp',
   composerNote: 'Ouvre votre messagerie avec la phrase déjà rédigée · Réponse sous un jour ouvré',
   contactStatus: 'Nouveaux projets acceptés pour le T3 2026 · Réponse sous un jour ouvré',
   orgs: [

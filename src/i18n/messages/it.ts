@@ -133,6 +133,8 @@ export const it = {
   msgPh: 'Teniamoci qualcosa da raccontare di persona.',
   sendDone: "Inviate — l'email è già scritta ↗",
   sendAny: 'Inviate comunque — ci pensiamo noi ↗',
+  waSend: 'Inviate su WhatsApp ↗',
+  waChat: 'Scriveteci su WhatsApp',
   composerNote:
     'Apre la vostra app di posta con la frase già scritta · Rispondiamo entro un giorno lavorativo',
   contactStatus:
