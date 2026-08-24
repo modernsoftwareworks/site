@@ -2,6 +2,7 @@
 import type { Messages } from '../../i18n/schema';
 import { composeInquiry, emptyState, MESSAGE_MAX } from '../../lib/composer';
 import BrandMark from '../brand/BrandMark.astro';
+import WhatsAppMark from '../brand/WhatsAppMark.astro';
 
 interface Props {
   messages: Messages;
@@ -90,6 +91,9 @@ const copy = {
 
     <div class="actions">
       <a class="send" href={initial.mailto} data-send>{initial.sendLabel}</a>
+      <a class="send wa" href={initial.whatsapp} data-send-wa>
+        <WhatsAppMark />{t.waSend}
+      </a>
       <span class="note">{t.composerNote}</span>
     </div>
 
@@ -290,7 +294,9 @@ const copy = {
   }
 
   .send {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     background: var(--wash);
     color: var(--ink);
     padding: 17px 34px;
@@ -312,11 +318,27 @@ const copy = {
       color: var(--ink);
       transform: scale(1.05);
     }
+
+    .wa:hover {
+      background: transparent;
+      color: var(--paper);
+      border-color: var(--on-dark);
+    }
+  }
+
+  /* Second channel, so it reads as the alternative rather than a rival to the
+     primary action. */
+  .wa {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--hair-dark);
+    --wa-size: 18px;
   }
 
   .note {
     font-size: 13.5px;
     color: var(--muted-3);
+    flex-basis: 100%;
   }
 
   .status {

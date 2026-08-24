@@ -7,6 +7,7 @@ export function mountComposer(): void {
   for (const root of roots) {
     const raw = root.dataset.composer;
     const send = root.querySelector<HTMLAnchorElement>('[data-send]');
+    const sendWa = root.querySelector<HTMLAnchorElement>('[data-send-wa]');
     const count = root.querySelector<HTMLElement>('[data-count]');
     if (!raw || !send || !count) {
       continue;
@@ -22,6 +23,9 @@ export function mountComposer(): void {
       const composed = composeInquiry(copy, state);
       send.href = composed.mailto;
       send.textContent = composed.sendLabel;
+      if (sendWa) {
+        sendWa.href = composed.whatsapp;
+      }
       count.textContent = String(state.message.length).padStart(2, '0');
     };
 
