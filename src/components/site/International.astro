@@ -43,6 +43,7 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
     {shown.map((code) => (
         <a
           class="card"
+          data-spotlight
           href={localePath(code)}
           hreflang={code}
           lang={code}
@@ -103,20 +104,15 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
   }
 
   .card {
-    padding: clamp(22px, 3vh, 32px) clamp(20px, 3vw, 40px);
-    background: var(--paper);
+    padding: clamp(24px, 3.2vh, 36px) clamp(20px, 3vw, 40px);
+    background: var(--surface-card);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     color: var(--ink);
-    transition: background var(--t-quick);
-  }
-
-  @media (hover: hover) {
-    .card:hover {
-      background: var(--paper-2);
-      color: var(--ink);
-    }
+    transition:
+      background var(--t-quick),
+      transform var(--t-lift) var(--ease);
   }
 
   .region {
@@ -124,6 +120,8 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
     letter-spacing: var(--tracking-eyebrow);
     color: var(--accent-text);
     text-align: start;
+    position: relative;
+    z-index: 1;
   }
 
   .card[dir="rtl"] .region {
@@ -131,18 +129,20 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
   }
 
   .greeting {
-    font: 600 22px / 1.25 var(--stack-display);
+    font: 600 24px / 1.25 var(--stack-display);
+    position: relative;
+    z-index: 1;
   }
 
   .greeting.ja {
     font:
-      500 22px / 1.4 var(--font-jp-serif, serif),
+      500 24px / 1.4 var(--font-jp-serif, serif),
       serif;
   }
 
   .greeting.ar {
     font:
-      500 22px / 1.5 var(--font-ar, serif),
+      500 24px / 1.5 var(--font-ar, serif),
       serif;
   }
 
@@ -150,9 +150,27 @@ const shown: Locale[] = (['it', 'fr', 'ja', 'ar'] as const).map((code) =>
     font-size: 14px;
     font-weight: 700;
     color: var(--accent-text);
+    position: relative;
+    z-index: 1;
+    transition: translate var(--t-quick) var(--ease);
   }
 
   .action.ar {
     font-family: var(--font-ar, serif), serif;
+  }
+
+  @media (hover: hover) {
+    .card:hover {
+      background: var(--surface-card-hover);
+      color: var(--ink);
+    }
+
+    .card:hover .action {
+      translate: 4px 0;
+    }
+
+    .card[dir="rtl"]:hover .action {
+      translate: -4px 0;
+    }
   }
 </style>

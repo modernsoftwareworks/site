@@ -3,6 +3,7 @@ import type { Locale } from '../../i18n/locales';
 import { messages } from '../../i18n/messages';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import Contact from './Contact.astro';
+import FractalCanvas from './FractalCanvas.astro';
 import Hero from './Hero.astro';
 import International from './International.astro';
 import Method from './Method.astro';
@@ -20,6 +21,7 @@ const t = messages[locale];
 ---
 
 <SiteLayout locale={locale} messages={t}>
+  <FractalCanvas />
   <SiteNav locale={locale} messages={t} />
   <main id="main">
     <Hero messages={t} />
@@ -31,6 +33,12 @@ const t = messages[locale];
   </main>
   <SiteFooter locale={locale} messages={t} />
 </SiteLayout>
+
+<script>
+  import { mountMotion } from '../../scripts/motion';
+
+  mountMotion();
+</script>
 
 <script is:inline define:vars={{ locale }}>
   try {

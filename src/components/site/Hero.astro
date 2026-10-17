@@ -16,6 +16,11 @@ const marquee = [...t.services, ...t.services];
 <section id="top" class="hero">
   <div class="stage">
     <div class="copy">
+      <p class="eyebrow">
+        <span class="eyebrow-pulse" aria-hidden="true"></span>
+        <span>{t.overline}</span>
+      </p>
+
       <h1 class="headline">
         <span class="clip"><span class="line a">{t.h1a}</span></span>
         <span class="clip"
@@ -24,14 +29,105 @@ const marquee = [...t.services, ...t.services];
       </h1>
       <p class="lede">{t.lede}</p>
       <div class="ctas">
-        <a class="cta primary" href={mailHref(t.inquirySubject)}>{t.cta1}</a>
-        <a class="cta ghost" href="#services">{t.cta2}</a>
+        <a class="cta primary" data-magnetic="0.28" href={mailHref(t.inquirySubject)}>
+          <span>{t.cta1}</span>
+          <span class="cta-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="cta ghost" data-magnetic="0.22" href="#services">{t.cta2}</a>
       </div>
     </div>
 
     <div class="mark-stage" data-tilt>
-      <div class="mark-float">
-        <span class="mark-wrap" data-tilt-target><BrandMark /></span>
+      <div class="mark-orb">
+        <div class="fractal-halo" data-tilt-orbits aria-hidden="true">
+          <svg class="halo-svg cw" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+            <circle
+              cx="200"
+              cy="200"
+              r="182"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-dasharray="4 8"
+            ></circle>
+            <circle
+              cx="200"
+              cy="200"
+              r="148"
+              stroke="currentColor"
+              stroke-width="0.85"
+              opacity="0.65"
+            ></circle>
+            <polygon
+              points="200,26 350,113 350,287 200,374 50,287 50,113"
+              stroke="currentColor"
+              stroke-width="0.85"
+              opacity="0.45"
+            ></polygon>
+            <polygon
+              points="200,26 350,287 50,287"
+              stroke="currentColor"
+              stroke-width="0.7"
+              opacity="0.3"
+            ></polygon>
+            <polygon
+              points="200,374 350,113 50,113"
+              stroke="currentColor"
+              stroke-width="0.7"
+              opacity="0.3"
+            ></polygon>
+            <circle cx="200" cy="18" r="3.5" fill="var(--accent)"></circle>
+            <circle cx="382" cy="200" r="3" fill="var(--accent)"></circle>
+            <circle cx="18" cy="200" r="3" fill="var(--accent)"></circle>
+          </svg>
+
+          <svg class="halo-svg ccw" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+            <ellipse
+              cx="200"
+              cy="200"
+              rx="168"
+              ry="82"
+              transform="rotate(30 200 200)"
+              stroke="currentColor"
+              stroke-width="0.9"
+              opacity="0.45"
+            ></ellipse>
+            <ellipse
+              cx="200"
+              cy="200"
+              rx="168"
+              ry="82"
+              transform="rotate(90 200 200)"
+              stroke="currentColor"
+              stroke-width="0.9"
+              opacity="0.45"
+            ></ellipse>
+            <ellipse
+              cx="200"
+              cy="200"
+              rx="168"
+              ry="82"
+              transform="rotate(150 200 200)"
+              stroke="currentColor"
+              stroke-width="0.9"
+              opacity="0.45"
+            ></ellipse>
+            <rect
+              x="88"
+              y="88"
+              width="224"
+              height="224"
+              transform="rotate(45 200 200)"
+              stroke="currentColor"
+              stroke-width="0.75"
+              stroke-dasharray="3 6"
+              opacity="0.4"
+            ></rect>
+          </svg>
+        </div>
+
+        <div class="mark-float">
+          <span class="mark-wrap" data-tilt-target><BrandMark /></span>
+        </div>
       </div>
     </div>
   </div>
@@ -62,16 +158,45 @@ const marquee = [...t.services, ...t.services];
     flex-direction: column;
     scroll-snap-align: start;
     border-bottom: 1px solid var(--ink);
-    background: linear-gradient(180deg, var(--paper) 45%, var(--paper-2) 100%);
+    background: linear-gradient(180deg, var(--surface-band) 35%, var(--surface-band-alt) 100%);
+    position: relative;
+    overflow: hidden;
   }
 
   .stage {
     flex: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(min(100%, 220px), 1fr);
+    grid-template-columns: minmax(0, 1.45fr) minmax(min(100%, 240px), 1fr);
     gap: clamp(24px, 4vw, 64px);
     align-items: center;
     padding: clamp(32px, 5vh, 72px) var(--gutter);
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow {
+    animation: var(--anim-rise) 0.8s var(--ease) both;
+    margin: 0 0 clamp(14px, 2vh, 22px);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--hair);
+    background: var(--surface-card);
+    font: 700 11px var(--stack-mono);
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: var(--accent-text);
+    backdrop-filter: blur(10px);
+  }
+
+  .eyebrow-pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
   }
 
   .headline {
@@ -109,10 +234,17 @@ const marquee = [...t.services, ...t.services];
 
   .line em {
     font-style: normal;
-    background: var(--wash);
+    background: linear-gradient(
+      125deg,
+      var(--wash) 0%,
+      color-mix(in srgb, var(--accent) 26%, var(--wash)) 50%,
+      var(--wash) 100%
+    );
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     padding: 2px 18px;
     border-radius: 16px;
     display: inline-block;
+    box-shadow: 0 10px 30px -10px var(--mark-glow);
   }
 
   .lede {
@@ -139,52 +271,90 @@ const marquee = [...t.services, ...t.services];
     font-weight: 700;
     font-size: 15px;
     border-radius: 999px;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     transition:
       transform var(--t-lift) var(--ease),
+      translate var(--t-quick) ease-out,
       background var(--t-lift),
-      color var(--t-lift);
+      color var(--t-lift),
+      box-shadow var(--t-lift);
+  }
+
+  .cta-arrow {
+    display: inline-block;
+    transition: transform var(--t-quick) var(--ease);
   }
 
   .primary {
     background: var(--ink);
     color: var(--paper);
+    box-shadow: 0 10px 26px -8px var(--mark-glow);
   }
 
   .ghost {
     color: var(--ink);
     padding-inline: 26px;
     border: 1px solid var(--ink);
-  }
-
-  @media (hover: hover) {
-    .primary:hover {
-      background: var(--accent);
-      color: var(--paper);
-      transform: translateY(-3px);
-    }
-
-    .ghost:hover {
-      background: var(--paper-2);
-      color: var(--ink);
-      transform: translateY(-3px);
-    }
+    background: color-mix(in srgb, var(--paper) 55%, transparent);
+    backdrop-filter: blur(8px);
   }
 
   .mark-stage {
     display: flex;
+    align-items: center;
     justify-content: center;
     perspective: 900px;
   }
 
+  .mark-orb {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(240px, 31vw, 430px);
+    height: clamp(240px, 31vw, 430px);
+  }
+
+  .fractal-halo {
+    position: absolute;
+    inset: 0;
+    color: var(--accent);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--t-quick) ease-out;
+  }
+
+  .halo-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .halo-svg.cw {
+    animation: var(--anim-orbit-cw) 48s linear infinite;
+  }
+
+  .halo-svg.ccw {
+    animation: var(--anim-orbit-ccw) 34s linear infinite;
+  }
+
   .mark-float {
+    position: relative;
+    z-index: 1;
     animation: var(--anim-floaty) 7s ease-in-out infinite;
   }
 
   .mark-wrap {
     display: inline-flex;
-    --mark-size: clamp(180px, 22vw, 330px);
-    filter: drop-shadow(0 24px 40px rgb(90 127 184 / 28%));
+    --mark-size: clamp(165px, 20vw, 300px);
+    color: var(--ink);
+    filter: drop-shadow(0 24px 42px var(--mark-glow));
     transition: transform var(--t-quick) ease-out;
     will-change: transform;
   }
@@ -196,6 +366,8 @@ const marquee = [...t.services, ...t.services];
     overflow: hidden;
     padding: 13px 0;
     white-space: nowrap;
+    position: relative;
+    z-index: 1;
   }
 
   .track {
@@ -218,6 +390,31 @@ const marquee = [...t.services, ...t.services];
 
   .star {
     color: var(--accent);
+    display: inline-block;
+    animation: var(--anim-orbit-cw) 10s linear infinite;
+  }
+
+  @media (hover: hover) {
+    .primary:hover {
+      background: var(--accent);
+      color: var(--paper);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px -6px var(--mark-glow);
+    }
+
+    .primary:hover .cta-arrow {
+      transform: translate(3px, -3px);
+    }
+
+    .ghost:hover {
+      background: var(--paper-2);
+      color: var(--ink);
+      transform: translateY(-3px);
+    }
+
+    .marquee:hover .track {
+      animation-play-state: paused;
+    }
   }
 
   @media (max-width: 900px) {
@@ -231,12 +428,15 @@ const marquee = [...t.services, ...t.services];
       justify-content: flex-start;
     }
 
-    .mark-wrap {
-      --mark-size: clamp(96px, 3rem + 14vw, 180px);
+    .mark-orb {
+      width: clamp(144px, 4.5rem + 18vw, 240px);
+      height: clamp(144px, 4.5rem + 18vw, 240px);
     }
 
-    /* Without the full-height floor the grid no longer has spare room to
-       distribute, which is what was leaving ~400px of dead air at tablet width. */
+    .mark-wrap {
+      --mark-size: clamp(96px, 3rem + 12vw, 164px);
+    }
+
     .hero {
       min-height: 0;
     }
@@ -247,8 +447,6 @@ const marquee = [...t.services, ...t.services];
     }
   }
 
-  /* Stacked, content-width buttons read as ragged; at this size they are the
-     two primary actions and should present as one block. */
   @media (max-width: 480px) {
     .ctas {
       gap: 10px;

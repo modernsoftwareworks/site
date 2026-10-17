@@ -14,20 +14,21 @@ const numerals =
 ---
 
 <section id="services" class="band services">
-  <div class="head reveal">
-    <h2>{t.servicesH2}</h2>
-    <p>{t.servicesLede}</p>
+  <div class="services-head reveal">
+    <h2 class="services-h2">{t.servicesH2}</h2>
+    <p class="services-lede">{t.servicesLede}</p>
   </div>
 
   <ul class="list">
     {t.services.map((service, index) => (
-        <li class="row">
+        <li class="row" data-spotlight style={`--row-i: ${index}`}>
           <span class="n">{numerals[index]}</span>
           <h3 class="title">{service.title}</h3>
           <div class="body">
             <p class="detail">{service.detail}</p>
             <p class="audience">{service.audience}</p>
           </div>
+          <span class="glyph" aria-hidden="true">✦</span>
         </li>
       ))}
   </ul>
@@ -40,7 +41,7 @@ const numerals =
     justify-content: center;
   }
 
-  .head {
+  .services-head {
     padding: clamp(28px, 4.5vh, 64px) var(--gutter) clamp(18px, 3vh, 36px);
     display: flex;
     justify-content: space-between;
@@ -49,13 +50,13 @@ const numerals =
     flex-wrap: wrap;
   }
 
-  h2 {
+  .services-h2 {
     margin: 0;
     font: 600 var(--step-h2) / 1.1 var(--stack-display);
     letter-spacing: var(--tracking-h2);
   }
 
-  .head p {
+  .services-lede {
     margin: 0 0 6px;
     font-size: 15px;
     line-height: 1.55;
@@ -77,33 +78,33 @@ const numerals =
   }
 
   .row {
-    background: var(--paper);
+    background: var(--surface-card);
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 6px clamp(24px, 4vw, 56px);
-    padding: clamp(15px, 2.2vh, 24px) var(--gutter);
+    padding: clamp(16px, 2.3vh, 26px) var(--gutter);
     transition:
       background var(--t-quick),
       padding-inline-start var(--t-slide) var(--ease);
     animation: var(--anim-reveal) 0.7s var(--ease) both;
+    animation-delay: calc(var(--row-i, 0) * 0.05s);
     animation-timeline: view();
     animation-range: entry 0% entry 35%;
   }
 
-  /* Gated: on a touch screen :hover latches after a tap and the row would
-     stay tinted and indented for the rest of the session. */
-  @media (hover: hover) {
-    .row:hover {
-      background: var(--paper-2);
-      padding-inline-start: clamp(32px, 5vw, 84px);
-    }
-  }
-
   .n {
     flex: 0 0 auto;
-    font: 500 13px var(--stack-mono);
+    font: 700 12px var(--stack-mono);
     color: var(--accent-text);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--hair);
+    background: var(--paper-2);
+    transition:
+      background var(--t-quick),
+      color var(--t-quick),
+      border-color var(--t-quick);
   }
 
   .title {
@@ -111,6 +112,8 @@ const numerals =
     min-width: 0;
     margin: 0;
     font: 600 var(--step-h3) var(--stack-display);
+    position: relative;
+    z-index: 1;
   }
 
   .body {
@@ -119,6 +122,8 @@ const numerals =
     display: flex;
     flex-direction: column;
     gap: 4px;
+    position: relative;
+    z-index: 1;
   }
 
   .detail {
@@ -134,5 +139,41 @@ const numerals =
     font-size: 12.5px;
     font-weight: 700;
     color: var(--accent-text);
+  }
+
+  .glyph {
+    flex: 0 0 auto;
+    color: var(--accent);
+    font-size: 14px;
+    opacity: 0.35;
+    transition:
+      transform var(--t-spin) var(--ease),
+      opacity var(--t-quick);
+  }
+
+  /* Gated: on a touch screen :hover latches after a tap and the row would
+     stay tinted and indented for the rest of the session. */
+  @media (hover: hover) {
+    .row:hover {
+      background: var(--surface-card-hover);
+      padding-inline-start: clamp(32px, 5vw, 84px);
+    }
+
+    .row:hover .n {
+      background: var(--accent);
+      color: var(--paper);
+      border-color: var(--accent);
+    }
+
+    .row:hover .glyph {
+      opacity: 1;
+      transform: rotate(90deg) scale(1.25);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .glyph {
+      display: none;
+    }
   }
 </style>

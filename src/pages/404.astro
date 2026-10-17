@@ -1,4 +1,5 @@
 ---
+import FractalCanvas from '../components/site/FractalCanvas.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
 import SiteNav from '../components/site/SiteNav.astro';
 import { messages } from '../i18n/messages';
@@ -8,14 +9,21 @@ const t = messages.en;
 ---
 
 <SiteLayout locale="en" messages={{ ...t, title: t.notFoundTitle }} noindex>
+  <FractalCanvas />
   <SiteNav locale="en" messages={t} />
   <main id="main" class="lost">
     <p class="code">404</p>
     <h1>{t.notFoundHeadline}</h1>
-    <a class="home" href="/">{t.notFoundHome}</a>
+    <a class="home" data-magnetic="0.25" href="/">{t.notFoundHome}</a>
   </main>
   <SiteFooter locale="en" messages={t} />
 </SiteLayout>
+
+<script>
+  import { mountMotion } from '../scripts/motion';
+
+  mountMotion();
+</script>
 
 <style>
   .lost {
@@ -27,7 +35,7 @@ const t = messages.en;
     align-items: flex-start;
     gap: 20px;
     padding: clamp(40px, 8vh, 96px) var(--gutter);
-    background: linear-gradient(180deg, var(--paper) 45%, var(--paper-2) 100%);
+    background: linear-gradient(180deg, var(--surface-band) 45%, var(--surface-band-alt) 100%);
     border-bottom: 1px solid var(--ink);
   }
 
@@ -55,6 +63,7 @@ const t = messages.en;
     border-radius: 999px;
     transition:
       transform var(--t-lift) var(--ease),
+      translate var(--t-quick) ease-out,
       background var(--t-lift);
   }
 

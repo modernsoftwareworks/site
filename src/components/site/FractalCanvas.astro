@@ -1,0 +1,83 @@
+---
+/**
+ * Full-viewport fixed WebGL fractal canvas plus a subtle architectural SVG grid
+ * and noise grain overlay. Renders behind the bands and adapts dynamically to
+ * the active `[data-variant]` theme.
+ */
+---
+
+<div class="fractal-backdrop" aria-hidden="true">
+  <canvas class="fractal-canvas" data-fractal-canvas></canvas>
+  <div class="fractal-grid"></div>
+  <div class="fractal-vignette"></div>
+</div>
+
+<div class="scroll-progress" aria-hidden="true">
+  <span class="scroll-bar"></span>
+</div>
+
+<script>
+  import { mountFractalCanvas } from '../../scripts/fractal-canvas';
+
+  mountFractalCanvas();
+</script>
+
+<style>
+  .fractal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .fractal-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: var(--fractal-opacity, 0.72);
+    transition: opacity 0.6s var(--ease);
+  }
+
+  .fractal-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: clamp(48px, 6vw, 88px) clamp(48px, 6vw, 88px);
+    mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 25%, transparent 100%);
+    opacity: var(--grid-opacity, 0.45);
+  }
+
+  .fractal-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 50% 35%,
+      transparent 30%,
+      color-mix(in srgb, var(--paper) 55%, transparent) 100%
+    );
+  }
+
+  .scroll-progress {
+    position: fixed;
+    top: var(--nav-h);
+    inset-inline: 0;
+    height: 2px;
+    z-index: 60;
+    pointer-events: none;
+    background: transparent;
+  }
+
+  .scroll-bar {
+    display: block;
+    height: 100%;
+    width: 100%;
+    transform-origin: inline-start center;
+    transform: scaleX(var(--scroll-progress, 0));
+    background: linear-gradient(90deg, var(--accent), var(--on-dark), var(--accent));
+    box-shadow: 0 0 12px var(--accent);
+    transition: transform 0.08s linear;
+  }
+</style>

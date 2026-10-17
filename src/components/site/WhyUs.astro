@@ -12,8 +12,27 @@ const { messages: t } = Astro.props;
   <h2 class="reveal">{t.whyH2}</h2>
 
   <div class="grid">
-    {t.reasons.map((reason) => (
-        <article class="reason">
+    {t.reasons.map((reason, idx) => (
+        <article class="reason" data-spotlight style={`--reason-i: ${idx}`}>
+          <div class="reason-top" aria-hidden="true">
+            <span class="reason-index">0{idx + 1}</span>
+            <svg class="reason-geo" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <circle
+                cx="18"
+                cy="18"
+                r="15"
+                stroke="currentColor"
+                stroke-width="1"
+                opacity="0.4"
+              ></circle>
+              <polygon
+                points="18,5 30,26 6,26"
+                stroke="currentColor"
+                stroke-width="1"
+                opacity="0.7"
+              ></polygon>
+            </svg>
+          </div>
           <h3>{reason.title}</h3>
           <p>{reason.detail}</p>
         </article>
@@ -27,7 +46,7 @@ const { messages: t } = Astro.props;
     flex-direction: column;
     justify-content: center;
     padding: clamp(32px, 5vh, 84px) var(--gutter);
-    background: var(--paper-2);
+    background: var(--surface-band-alt);
   }
 
   h2 {
@@ -39,21 +58,58 @@ const { messages: t } = Astro.props;
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-    gap: clamp(24px, 4vw, 56px);
+    gap: clamp(20px, 3vw, 36px);
   }
 
   .reason {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    padding: clamp(24px, 3.5vh, 36px);
+    border-radius: 20px;
+    border: 1px solid var(--hair);
+    background: var(--surface-card);
+    box-shadow: 0 16px 36px -18px rgb(0 0 0 / 12%);
+    transition:
+      transform var(--t-lift) var(--ease),
+      border-color var(--t-quick),
+      background var(--t-quick);
     animation: var(--anim-reveal) 0.8s var(--ease) both;
+    animation-delay: calc(var(--reason-i, 0) * 0.08s);
     animation-timeline: view();
     animation-range: entry 0% entry 45%;
+  }
+
+  .reason-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .reason-index {
+    font: 700 11px var(--stack-mono);
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--accent-text);
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--wash);
+  }
+
+  .reason-geo {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    transition: transform var(--t-spin) var(--ease);
   }
 
   .reason h3 {
     margin: 0;
     font: 600 var(--step-h3) var(--stack-display);
+    position: relative;
+    z-index: 1;
   }
 
   .reason p {
@@ -62,5 +118,19 @@ const { messages: t } = Astro.props;
     line-height: 1.65;
     color: var(--muted);
     max-width: 44ch;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (hover: hover) {
+    .reason:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      background: var(--surface-card-hover);
+    }
+
+    .reason:hover .reason-geo {
+      transform: rotate(60deg) scale(1.1);
+    }
   }
 </style>

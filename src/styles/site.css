@@ -1,5 +1,5 @@
 /*
- * Design tokens and page-level base, ported from the "MSW Landing" canvas.
+ * Design tokens, Ether fractal surface tokens, and page-level base.
  * Section styling lives with each component in src/components/site/.
  */
 
@@ -20,6 +20,16 @@
   --hair-dark: #313a47;
   --ph-select: #8fa6c9;
 
+  --surface-band: color-mix(in srgb, var(--paper) 78%, transparent);
+  --surface-band-alt: color-mix(in srgb, var(--paper-2) 82%, transparent);
+  --surface-card: color-mix(in srgb, var(--paper) 88%, transparent);
+  --surface-card-hover: color-mix(in srgb, var(--paper-2) 94%, transparent);
+  --spotlight: rgb(90 127 184 / 15%);
+  --grid-line: rgb(18 22 29 / 5%);
+  --fractal-opacity: 0.72;
+  --grid-opacity: 0.5;
+  --mark-glow: rgb(90 127 184 / 30%);
+
   /* Astro downloads each family; the cascade is composed here so Latin runs in
      the brand faces and CJK/Arabic fall through to Noto. */
   --stack-body: var(--font-body), system-ui, sans-serif;
@@ -33,10 +43,7 @@
   --tracking-eyebrow: 0.08em;
   --tracking-overline: 0.12em;
 
-  /* Type steps ramp from 320px to 1440px. The canvas's own `Nvw` middle terms
-     only overtook their minimum somewhere past 650px, so every phone rendered at
-     the floor and the scale did no work; these carry an intercept so the ramp
-     starts at the narrowest screen. Each maximum is the canvas value unchanged. */
+  /* Type steps ramp from 320px to 1440px. */
   --step-h1: clamp(34px, 1.161rem + 4.821vw, 88px);
   --step-h2: clamp(26px, 1.161rem + 2.321vw, 52px);
   --step-h3: clamp(18px, 1rem + 0.625vw, 25px);
@@ -60,6 +67,8 @@
   --anim-reveal: reveal;
   --anim-floaty: floaty;
   --anim-marquee: marquee;
+  --anim-orbit-cw: orbit-cw;
+  --anim-orbit-ccw: orbit-ccw;
   --t-quick: 0.25s;
   --t-lift: 0.3s;
   --t-slide: 0.35s;
@@ -109,6 +118,12 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
 a {
   color: var(--accent-text);
   text-decoration: none;
@@ -139,6 +154,37 @@ select option {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* Magnetic pull wrapper for interactive CTAs and links */
+[data-magnetic] {
+  translate: var(--mag-x, 0px) var(--mag-y, 0px);
+}
+
+/* Cursor-tracked radial spotlight overlay for cards and rows */
+[data-spotlight] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-spotlight]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--mx, -999px) var(--my, -999px),
+    var(--spotlight),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity var(--t-quick);
+}
+
+@media (hover: hover) {
+  [data-spotlight]:hover::before {
+    opacity: 1;
+  }
 }
 
 /* Parked above the viewport rather than 9999px to the inline-start, which in the
@@ -182,6 +228,9 @@ select option {
   box-sizing: border-box;
   scroll-snap-align: start;
   border-bottom: 1px solid var(--ink);
+  background: var(--surface-band);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Below 900px the one-band-per-screen system stops being true: a phone cannot
@@ -249,6 +298,24 @@ select option {
   }
 }
 
+@keyframes orbit-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-ccw {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
 /* Scroll-driven entrances. Where `animation-timeline` is unsupported the
    declaration drops and `reveal` simply plays once on load, still ending at
    opacity 1 — content is never stranded invisible. */
@@ -264,6 +331,8 @@ select option {
     --anim-reveal: none;
     --anim-floaty: none;
     --anim-marquee: none;
+    --anim-orbit-cw: none;
+    --anim-orbit-ccw: none;
     --t-quick: 0s;
     --t-lift: 0s;
     --t-slide: 0s;

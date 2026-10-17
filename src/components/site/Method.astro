@@ -9,15 +9,48 @@ const { messages: t } = Astro.props;
 ---
 
 <section id="method" class="band method">
-  <div class="reveal">
+  <div class="intro reveal">
     <h2>{t.methodH2a}<br>{t.methodH2b}</h2>
     <p class="lede">{t.methodLede}</p>
+
+    <svg class="method-fractal" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+      <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="1" opacity="0.45"></circle>
+      <circle cx="85" cy="40" r="28" stroke="currentColor" stroke-width="1" opacity="0.55"></circle>
+      <circle
+        cx="130"
+        cy="40"
+        r="28"
+        stroke="currentColor"
+        stroke-width="1"
+        opacity="0.65"
+      ></circle>
+      <circle
+        cx="175"
+        cy="40"
+        r="28"
+        stroke="currentColor"
+        stroke-width="1"
+        opacity="0.85"
+      ></circle>
+      <line
+        x1="12"
+        y1="40"
+        x2="215"
+        y2="40"
+        stroke="currentColor"
+        stroke-width="1"
+        stroke-dasharray="3 5"
+      ></line>
+    </svg>
   </div>
 
   <ol class="steps">
-    {t.steps.map((step) => (
-        <li class="step">
-          <span class="label">{step.label}</span>
+    {t.steps.map((step, index) => (
+        <li class="step" data-spotlight style={`--step-i: ${index}`}>
+          <span class="label">
+            <span class="node" aria-hidden="true" />
+            {step.label}
+          </span>
           <p class="text">
             <strong>{step.title}</strong> <span>{step.detail}</span>
           </p>
@@ -49,21 +82,37 @@ const { messages: t } = Astro.props;
     max-width: 380px;
   }
 
+  .method-fractal {
+    margin-top: clamp(20px, 3.5vh, 36px);
+    width: 210px;
+    height: auto;
+    color: var(--accent);
+    display: block;
+  }
+
   .steps {
     margin: 0;
     padding: 0;
     list-style: none;
     display: flex;
     flex-direction: column;
+    gap: 12px;
   }
 
   .step {
     display: flex;
-    gap: 24px;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--hair);
+    gap: 22px;
+    padding: 22px 24px;
+    border: 1px solid var(--hair);
+    border-radius: 16px;
+    background: var(--surface-card);
     align-items: baseline;
+    transition:
+      transform var(--t-lift) var(--ease),
+      border-color var(--t-quick),
+      background var(--t-quick);
     animation: var(--anim-reveal) 0.7s var(--ease) both;
+    animation-delay: calc(var(--step-i, 0) * 0.07s);
     animation-timeline: view();
     animation-range: entry 0% entry 40%;
   }
@@ -72,6 +121,22 @@ const { messages: t } = Astro.props;
     font: 700 12px var(--stack-mono);
     color: var(--accent-text);
     flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .node {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-text);
+    box-shadow: 0 0 8px var(--mark-glow);
+    transition:
+      transform var(--t-quick) var(--ease),
+      background var(--t-quick);
   }
 
   .text {
@@ -79,11 +144,26 @@ const { messages: t } = Astro.props;
     color: var(--muted);
     font-size: 16px;
     line-height: 1.6;
+    position: relative;
+    z-index: 1;
   }
 
   .text strong {
     color: var(--ink);
     font-weight: 700;
     font-size: 17px;
+  }
+
+  @media (hover: hover) {
+    .step:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      background: var(--surface-card-hover);
+    }
+
+    .step:hover .node {
+      transform: scale(1.35);
+      background: var(--accent);
+    }
   }
 </style>
